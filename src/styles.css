@@ -1,0 +1,129 @@
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&display=swap");
+
+:root {
+    --background: #f7f8fc;
+    --surface: #ffffff;
+    --text: #172b4d;
+    --primary: #0052cc;
+    --primary-hover: #003fa3;
+    --accent: #7c3aed;
+    --success: #00875a;
+    --highlight: #ffab00;
+    --border: #dfe3eb;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 32px;
+    background: var(--background);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+h1, h2, h3 {
+    font-family: "Comfortaa", sans-serif;
+    line-height: 1.3;
+}
+
+h1 {
+    color: var(--primary);
+    font-size: clamp(2rem, 5vw, 3rem);
+}
+
+a {
+    color: var(--primary);
+    text-underline-offset: 3px;
+}
+
+button,
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 12px 22px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: var(--primary);
+    color: white;
+    font-family: "Comfortaa", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgb(0 82 204 / 15%);
+    transition: background 150ms ease, box-shadow 150ms ease;
+}
+
+button:hover,
+.button:hover {
+    background: var(--primary-hover);
+    box-shadow: 0 5px 12px rgb(0 82 204 / 22%);
+}
+
+.button-secondary {
+    background: var(--surface);
+    color: var(--primary);
+    border-color: var(--primary);
+    box-shadow: none;
+    border-radius: 8px;
+    border-color: #003fa3;
+}
+
+.button-secondary:hover {
+    background: #eaf1ff;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.card {
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgb(23 43 77 / 6%);
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    button, .button {
+        transition: none;
+    }
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="translation.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <title>ScriptFuse</title>
+    
+
+    <link rel="stylesheet" href="styles.css?v=3">
+</head>
+<body>
+<main class="page page-home">
+    <section class="card text-center">
+        <h1>ScriptFuse</h1>
+        <p data-key="Slogan"></p>
+        <br>
+        <p data-key="accountCreation"></p>
+        <section class="card text-center">
+            <form>
+                <label for="firstName" data-key="firstName">Name</label>
+                <input type="text" id="firstName" name="firstName" data-key="firstName"></input>
+                <br>
+                <br>
+                <label for="lastName" data-key="lastName">Last name</label>
+                <input type="text" id="lastName" name="lastName" data-key="lastName"></input>
+                <br>
+                <br>
+                <label for="emailAddress" data-key="emailAddress">emailAddress</label>
+                <input type="text" id="emailAddress" name="emailAddress" data-key="emailAddress"></input>
+                <br>
+                <br>
+                <label for="passWord" data-key="passWord">Password</label>
+                <input type="text" id="passWord" name="passWord" data-key="passWord"></input>
+                <br>
+                <br>
+                <label for="ConfirmPW" data-key="ConfirmPW">Confirm password</label>
+                <input type="text" id="ConfirmPW" name="ConfirmPW" data-key="ConfirmPW"></input>                   
+            </form>
+            <br><br>
+
+            <a data-key="createAccnt" id="createAccntBtn" class="button" href="acConfirmation.html">Create account</a>
+        </section>
+    </section>
+</main>
+</body>
+</html>
