@@ -5,7 +5,10 @@ export const translation = {
     accountCreation: "Account creation ",
     firstName: "First name",
     lastName: "Last name",
-    emailAddress: "Email adress",
+    emailAddress: "Email address",
+    passWord: "Password",
+    ConfirmPW: "Confirm password",
+    createAccnt: "Create account",
     creationSuccess: "Account creation successfull!",
     descriptionSF: "At ScriptFuse, we turn your ideas into custom websites that reflect your business. We bring thoughtful design and technical know-how to every project, creating a modern, easy-to-use site that helps visitors discover what you offer and connect with you."
     },
@@ -13,7 +16,10 @@ export const translation = {
     fr:{
     firstName: "Prénom",
     lastName: "Nom",
-    emailAddress: "Courriel",  
+    emailAddress: "Courriel",
+    passWord: "Mot de passe",
+    ConfirmPW: "Confirmez le mot de passe",
+    createAccnt: "Créer un compte",
     creationSuccess: "Votre compte à été créé avec succès!", 
     Slogan: "Là où votre vision rencontre notre savoir-faire et où votre site prend vie.",
     getStarted: "Commencer",
@@ -37,14 +43,18 @@ function applyLanguage(language) {
         }
     });
 
-    languageToggle.textContent = language === "en" ? "FR" : "EN";
-    languageToggle.setAttribute(
-        "aria-label",
-        `Switch to ${language === "en" ? "French" : "English"}`
-    );
+    if (languageToggle) {
+        languageToggle.textContent = language === "en" ? "FR" : "EN";
+        languageToggle.setAttribute(
+            "aria-label",
+            `Switch to ${language === "en" ? "French" : "English"}`
+        );
+    }
 }
 
 applyLanguage(currentLanguage);
-languageToggle.addEventListener("click", () => {
-    applyLanguage(currentLanguage === "en" ? "fr" : "en");
-});
+if (languageToggle) {
+    languageToggle.addEventListener("click", () => {
+        applyLanguage(currentLanguage === "en" ? "fr" : "en");
+    });
+}

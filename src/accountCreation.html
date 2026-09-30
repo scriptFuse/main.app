@@ -14,34 +14,36 @@
 <body>
 <main class="page page-home">
     <section class="card text-center">
+        <div class="lang-box">
+            <button type="button" id="lang-toggle" class="lang-btn">EN / FR</button>
+        </div>
         <h1>ScriptFuse</h1>
         <p data-key="Slogan"></p>
         <br>
         <p data-key="accountCreation"></p>
         <section class="card text-center">
-            <form>
+            <form id="accountCreationForm">
                 <label for="firstName" data-key="firstName">Name</label>
-                <input type="text" id="firstName" name="firstName" data-key="firstName"></input>
+                <input type="text" id="firstName" name="firstName" autocomplete="given-name" required>
                 <br>
                 <br>
                 <label for="lastName" data-key="lastName">Last name</label>
-                <input type="text" id="lastName" name="lastName" data-key="lastName"></input>
+                <input type="text" id="lastName" name="lastName" autocomplete="family-name" required>
                 <br>
                 <br>
                 <label for="emailAddress" data-key="emailAddress">emailAddress</label>
-                <input type="text" id="emailAddress" name="emailAddress" data-key="emailAddress"></input>
+                <input type="email" id="emailAddress" name="emailAddress" autocomplete="email" required>
                 <br>
                 <br>
                 <label for="passWord" data-key="passWord">Password</label>
-                <input type="text" id="passWord" name="passWord" data-key="passWord"></input>
+                <input type="password" id="passWord" name="passWord" autocomplete="new-password" minlength="6" required>
                 <br>
                 <br>
                 <label for="ConfirmPW" data-key="ConfirmPW">Confirm password</label>
-                <input type="text" id="ConfirmPW" name="ConfirmPW" data-key="ConfirmPW"></input>                   
+                <input type="password" id="ConfirmPW" name="ConfirmPW" autocomplete="new-password" minlength="6" required>
+                <p id="accountCreationStatus" role="status" aria-live="polite"></p>
+                <button data-key="createAccnt" id="createAccntBtn" class="button" type="submit">Create account</button>
             </form>
-            <br><br>
-
-            <a data-key="createAccnt" id="createAccntBtn" class="button" href="acConfirmation.html">Create account</a>
         </section>
     </section>
 </main>
