@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="translation.js?v=7"></script>
+    <script type="module" src="firebase.js?v=3"></script>
+    <title>ScriptFuse</title>
+    <link rel="stylesheet" href="styles.css?v=6">
+</head>
+<body>
+<main class="page page-Quick Script Package">
+    <section class="card text-center">
+        <div class="page-header">
+            <a class="homeBtn" data-key="homeBtn" href="index.html">Home</a>
+            <div class="lang-box">
+                <button type="button" id="lang-toggle" class="lang-btn">EN / FR</button>
+            </div>
+        </div>
+
+        <!-- TITLE -->
+        <h1>ScriptFuse</h1>
+        <p data-key="Slogan"></p>
+
+
+        <!-- QUICK SCRIPT PACKAGE FORM -->
+        <section class="card text-center">
+            <form id="quickScriptForm" class="quick-script-form">
+
+<!-- BUSINESS INFORMATION -->
+<section class="brief-section" aria-labelledby="briefBusiness">
+<h2 id="briefBusiness" data-key="briefBusiness">1. Business information</h2>
+<label for="companyName" data-key="companyName">Business name</label>
+<input type="text" id="companyName" name="companyName" required>
+
+<label for="companyType" data-key="companyType">Type of business / industry</label>
+<select id="companyType" name="companyType" required>
+                    <option value="" data-key="selectIndustry" disabled selected>Select an industry</option>
+                    <option value="retail" data-key="industryRetail">Retail store</option>
+                    <option value="ecommerce" data-key="industryEcommerce">Online shop</option>
+                    <option value="fashion" data-key="industryFashion">Fashion / Accessories</option>
+                    <option value="handmade" data-key="industryHandmade">Handmade products</option>
+                    <option value="restaurant" data-key="industryRestaurant">Restaurant</option>
+                    <option value="cafe" data-key="industryCafe">Café</option>
+                    <option value="bakery" data-key="industryBakery">Bakery / Pastry shop</option>
+                    <option value="catering" data-key="industryCatering">Catering</option>
+                    <option value="food-truck" data-key="industryFoodTruck">Food truck</option>
+                    <option value="hair" data-key="industryHair">Hair salon / Barber</option>
+                    <option value="beauty" data-key="industryBeauty">Beauty / Cosmetics</option>
+                    <option value="nails" data-key="industryNails">Nail salon</option>
+                    <option value="spa" data-key="industrySpa">Spa / Massage therapy</option>
+                    <option value="fitness" data-key="industryFitness">Gym / Personal training</option>
+                    <option value="yoga" data-key="industryYoga">Yoga / Pilates</option>
+                    <option value="healthcare" data-key="industryHealthcare">Healthcare clinic</option>
+                    <option value="dental" data-key="industryDental">Dental clinic</option>
+                    <option value="therapy" data-key="industryTherapy">Counselling / Therapy</option>
+                    <option value="nutrition" data-key="industryNutrition">Nutrition services</option>
+                    <option value="construction" data-key="industryConstruction">Construction / Renovation</option>
+                    <option value="electrician" data-key="industryElectrician">Electrical services</option>
+                    <option value="plumbing" data-key="industryPlumbing">Plumbing</option>
+                    <option value="hvac" data-key="industryHvac">Heating / Air conditioning</option>
+                    <option value="landscaping" data-key="industryLandscaping">Landscaping / Gardening</option>
+                    <option value="cleaning" data-key="industryCleaning">Cleaning services</option>
+                    <option value="interior-design" data-key="industryInteriorDesign">Interior design</option>
+                    <option value="architecture" data-key="industryArchitecture">Architecture</option>
+                    <option value="real-estate" data-key="industryRealEstate">Real estate</option>
+                    <option value="property-management" data-key="industryPropertyManagement">Property management</option>
+                    <option value="accounting" data-key="industryAccounting">Accounting / Bookkeeping</option>
+                    <option value="legal" data-key="industryLegal">Legal services</option>
+                    <option value="finance" data-key="industryFinance">Financial services</option>
+                    <option value="insurance" data-key="industryInsurance">Insurance</option>
+                    <option value="consulting" data-key="industryConsulting">Business consulting</option>
+                    <option value="marketing" data-key="industryMarketing">Marketing / Advertising</option>
+                    <option value="technology" data-key="industryTechnology">Technology / IT services</option>
+                    <option value="photography" data-key="industryPhotography">Photography / Videography</option>
+                    <option value="graphic-design" data-key="industryGraphicDesign">Graphic design</option>
+                    <option value="arts" data-key="industryArts">Artist / Art gallery</option>
+                    <option value="music" data-key="industryMusic">Music / Entertainment</option>
+                    <option value="writing" data-key="industryWriting">Writing / Publishing</option>
+                    <option value="events" data-key="industryEvents">Event planning</option>
+                    <option value="weddings" data-key="industryWeddings">Wedding services</option>
+                    <option value="education" data-key="industryEducation">Education / Training</option>
+                    <option value="tutoring" data-key="industryTutoring">Tutoring / Language lessons</option>
+                    <option value="childcare" data-key="industryChildcare">Childcare / Daycare</option>
+                    <option value="sports" data-key="industrySports">Sports club / Coaching</option>
+                    <option value="pets" data-key="industryPets">Pet care / Grooming</option>
+                    <option value="veterinary" data-key="industryVeterinary">Veterinary services</option>
+                    <option value="automotive" data-key="industryAutomotive">Auto repair / Detailing</option>
+                    <option value="transport" data-key="industryTransport">Transportation / Delivery</option>
+                    <option value="travel" data-key="industryTravel">Travel / Tourism</option>
+                    <option value="accommodation" data-key="industryAccommodation">Hotel / Vacation rental</option>
+                    <option value="manufacturing" data-key="industryManufacturing">Manufacturing</option>
+                    <option value="agriculture" data-key="industryAgriculture">Agriculture / Farming</option>
+                    <option value="nonprofit" data-key="industryNonprofit">Nonprofit / Charity</option>
+                    <option value="community" data-key="industryCommunity">Community organization</option>
+                    <option value="personal" data-key="industryPersonal">Personal portfolio / Blog</option>
+                    <option value="other" data-key="industryOther">Other</option>
+                    </select>
+
+<label for="businessDescription" data-key="businessDescription">Briefly describe your business.</label>
+<textarea id="businessDescription" name="businessDescription" required></textarea>
+
+<label for="productsServices" data-key="productsServices">What are your main products or services?</label>
+<textarea id="productsServices" name="productsServices" required></textarea>
+
+<label for="companyAddress" data-key="companyAddress">Business location or service area</label>
+<input type="text" id="companyAddress" name="companyAddress" required>
+
+<label for="displayContact" data-key="displayContact">Which contact details would you like displayed on your website?</label>
+<textarea id="displayContact" name="displayContact"></textarea>
+
+<label for="phoneNumber" data-key="phoneNumber">Public business phone number (Optional)</label>
+<input type="tel" id="phoneNumber" name="phoneNumber">
+
+<label for="publicEmail" data-key="publicEmail">Public business email address (Optional)</label>
+<input type="email" id="publicEmail" name="publicEmail">
+</section>
+
+<!-- WEBSITE GOAL -->
+<section class="brief-section" aria-labelledby="briefGoal">
+<h2 id="briefGoal" data-key="briefGoal">2. Website goal</h2>
+<label for="websiteGoal" data-key="websiteGoal">What is the main purpose of your website?</label>
+<select id="websiteGoal" name="websiteGoal" required>
+<option value="" data-key="selectOne" disabled selected>Select one</option>
+<option value="present" data-key="goalPresent">Present my business</option>
+<option value="leads" data-key="goalLeads">Generate leads</option>
+<option value="contact" data-key="goalContact">Allow customers to contact me</option>
+<option value="services" data-key="goalServices">Showcase my services</option>
+<option value="portfolio" data-key="goalPortfolio">Showcase my work / portfolio</option>
+<option value="information" data-key="goalInformation">Provide information</option>
+<option value="other" data-key="goalOther">Other</option>
+</select>
+
+<label for="websiteGoalOther" data-key="websiteGoalOther">If you selected Other, please specify.</label>
+<input type="text" id="websiteGoalOther" name="websiteGoalOther">
+
+<label for="visitorAction" data-key="visitorAction">What is the main action you want visitors to take?</label>
+<textarea id="visitorAction" name="visitorAction" required></textarea>
+
+<p class="form-help" data-key="visitorActionHelp">Examples: call your business, request a quote, book an appointment, or contact you.</p>
+</section>
+
+<!-- TARGET AUDIENCE -->
+<section class="brief-section" aria-labelledby="briefAudience">
+<h2 id="briefAudience" data-key="briefAudience">3. Target audience</h2>
+<label for="typicalCustomers" data-key="typicalCustomers">Who are your typical customers?</label>
+<textarea id="typicalCustomers" name="typicalCustomers"></textarea>
+
+<label for="targetAudience" data-key="targetAudience">Is there a particular audience you would like to attract?</label>
+<textarea id="targetAudience" name="targetAudience"></textarea>
+</section>
+
+<!-- PAGES AND CONTENT -->
+<section class="brief-section" aria-labelledby="briefPages">
+<h2 id="briefPages" data-key="briefPages">4. Pages and content</h2>
+<fieldset class="choice-group"><legend data-key="requestedPages">Which pages would you like? Select all that apply.</legend><div class="choice-options"><label><input type="checkbox" name="requestedPages" value="home"><span data-key="pageHome">Home</span></label><label><input type="checkbox" name="requestedPages" value="about"><span data-key="pageAbout">About</span></label><label><input type="checkbox" name="requestedPages" value="services"><span data-key="pageServices">Services</span></label><label><input type="checkbox" name="requestedPages" value="contact"><span data-key="pageContact">Contact</span></label><label><input type="checkbox" name="requestedPages" value="gallery"><span data-key="pageGallery">Gallery / Portfolio</span></label><label><input type="checkbox" name="requestedPages" value="faq"><span data-key="pageFaq">FAQ</span></label><label><input type="checkbox" name="requestedPages" value="other"><span data-key="pageOther">Other</span></label></div></fieldset>
+
+<label for="otherPages" data-key="otherPages">Other requested pages (Optional)</label>
+<input type="text" id="otherPages" name="otherPages">
+
+<label for="pageContentDetails" data-key="pageContentDetails">Briefly describe the content you would like on each selected page.</label>
+<textarea id="pageContentDetails" name="pageContentDetails"></textarea>
+
+<label for="contentReadiness" data-key="contentReadiness">Do you already have the written content?</label>
+<select id="contentReadiness" name="contentReadiness" required>
+<option value="" data-key="selectOne" disabled selected>Select one</option>
+<option value="ready" data-key="briefContentReady">Yes, everything is ready</option>
+<option value="partial" data-key="briefContentPartial">Some of it</option>
+<option value="help-needed" data-key="briefContentNo">No</option>
+</select>
+
+<!-- AI PERMISSION FOR WRITTEN CONTENT -->
+
+<label for="aiContent" data-key="aiContent">May ScriptFuse use AI to draft or expand website text?</label>
+<select id="aiContent" name="aiContent" required>
+<option value="" data-key="selectOne" disabled selected>Select one</option>
+<option value="allow" data-key="aiAllow">Yes, I authorize this use</option>
+<option value="approval-required" data-key="aiReview">Only with my prior approval</option>
+<option value="decline" data-key="aiDecline">No, I do not authorize this use</option>
+</select>
+</section>
+
+<!-- BRANDING -->
+<section class="brief-section" aria-labelledby="briefBranding">
+<h2 id="briefBranding" data-key="briefBranding">5. Branding</h2>
+<label for="hasLogo" data-key="hasLogo">Do you have a logo?</label>
+<select id="hasLogo" name="hasLogo">
+<option value="" data-key="selectOne" disabled selected>Select one</option>
+<option value="yes" data-key="briefYes">Yes</option>
+<option value="no" data-key="briefNo">No</option>
+</select>
+
+<label class="file-dropzone" data-dropzone><input type="file" id="logoFile" name="logoFile" accept="image/*"><span data-key="logoFilePrompt">Drop your logo here or click to browse</span><span class="file-name-list" aria-live="polite"></span></label>
+
+<label for="hasBrandColors" data-key="hasBrandColors">Do you already have brand colors?</label>
+<select id="hasBrandColors" name="hasBrandColors">
+<option value="" data-key="selectOne" disabled selected>Select one</option>
+<option value="yes" data-key="briefYes">Yes</option>
+<option value="no" data-key="briefNo">No</option>
+</select>
+
+<label for="preferredColors" data-key="preferredColors">Preferred colors</label>
+<input type="text" id="preferredColors" name="preferredColors">
+
+<label for="excludedColors" data-key="excludedColors">Colors you do not want used</label>
+<input type="text" id="excludedColors" name="excludedColors">
+
+<label for="brandingGuidelines" data-key="brandingGuidelines">Do you have specific fonts or branding guidelines?</label>
+<textarea id="brandingGuidelines" name="brandingGuidelines"></textarea>
+</section>
+
+<!-- DESIGN PREFERENCES -->
+<section class="brief-section" aria-labelledby="briefDesign">
+<h2 id="briefDesign" data-key="briefDesign">6. Design preferences</h2>
+<label for="designPreference" data-key="designPreference">What design style would you prefer?</label>
+<select id="designPreference" name="designPreference">
+<option value="" data-key="selectOne" disabled selected>Select one</option>
+<option value="modern" data-key="styleModern">Modern</option>
+<option value="minimal" data-key="styleMinimal">Minimal</option>
+<option value="professional" data-key="styleProfessional">Professional / Corporate</option>
+<option value="elegant" data-key="styleElegant">Elegant</option>
+<option value="colorful" data-key="styleColorful">Bold / Colorful</option>
+<option value="playful" data-key="stylePlayful">Friendly / Playful</option>
+<option value="none" data-key="styleNone">No preference</option>
+</select>
+
+<label for="inspirationWebsite1" data-key="inspirationWebsite1">Website you like 1 (Optional)</label>
+<input type="url" id="inspirationWebsite1" name="inspirationWebsite1">
+
+<label for="inspirationWebsite2" data-key="inspirationWebsite2">Website you like 2 (Optional)</label>
+<input type="url" id="inspirationWebsite2" name="inspirationWebsite2">
+
+<label for="inspirationWebsite3" data-key="inspirationWebsite3">Website you like 3 (Optional)</label>
+<input type="url" id="inspirationWebsite3" name="inspirationWebsite3">
+
+<label for="inspirationDetails" data-key="inspirationDetails">What do you like about these websites?</label>
+<textarea id="inspirationDetails" name="inspirationDetails"></textarea>
+
+<p class="form-help" data-key="inspirationHelp">Please mention specific features, such as large images, colors, navigation, or layout.</p>
+
+<label for="dislikedDesign" data-key="dislikedDesign">Are there any website styles or elements you dislike?</label>
+<textarea id="dislikedDesign" name="dislikedDesign"></textarea>
+
+<!-- AI PERMISSION FOR DESIGN -->
+
+<label for="aiDesign" data-key="aiDesign">May ScriptFuse use AI to develop website design concepts?</label>
+<select id="aiDesign" name="aiDesign" required>
+<option value="" data-key="selectOne" disabled selected>Select one</option>
+<option value="allow" data-key="aiAllow">Yes, I authorize this use</option>
+<option value="approval-required" data-key="aiReview">Only with my prior approval</option>
+<option value="decline" data-key="aiDecline">No, I do not authorize this use</option>
+</select>
+</section>
+
+<!-- IMAGES AND MEDIA -->
+<section class="brief-section" aria-labelledby="briefMedia">
+<h2 id="briefMedia" data-key="briefMedia">7. Images and media</h2>
+<label for="hasOwnImages" data-key="hasOwnImages">Do you have your own photos or images?</label>
+<select id="hasOwnImages" name="hasOwnImages">
+<option value="" data-key="selectOne" disabled selected>Select one</option>
+<option value="yes" data-key="briefYes">Yes</option>
+<option value="no" data-key="briefNo">No</option>
+</select>
+
+<label class="file-dropzone" data-dropzone><input type="file" id="galleryFiles" name="galleryFiles" accept="image/*" multiple><span data-key="galleryFilesPrompt">Drop your images here or click to browse</span><span class="file-name-list" aria-live="polite"></span></label>
+
+<label for="stockImages" data-key="stockImages">May ScriptFuse use appropriate stock images if needed?</label>
+<select id="stockImages" name="stockImages">
+<option value="" data-key="selectOne" disabled selected>Select one</option>
+<option value="allow" data-key="aiAllow">Yes, I authorize this use</option>
+<option value="approval-required" data-key="aiReview">Only with my prior approval</option>
+<option value="decline" data-key="aiDecline">No, I do not authorize this use</option>
+</select>
+
+<label for="aiImages" data-key="aiImages">May ScriptFuse use AI to create or edit website images?</label>
+<select id="aiImages" name="aiImages" required>
+<option value="" data-key="selectOne" disabled selected>Select one</option>
+<option value="allow" data-key="aiAllow">Yes, I authorize this use</option>
+<option value="approval-required" data-key="aiReview">Only with my prior approval</option>
+<option value="decline" data-key="aiDecline">No, I do not authorize this use</option>
+</select>
+
+<label for="otherMedia" data-key="otherMedia">Do you have videos or other media you would like included? Please provide details or links.</label>
+<textarea id="otherMedia" name="otherMedia"></textarea>
+</section>
+
+<!-- EXISTING ONLINE PRESENCE -->
+<section class="brief-section" aria-labelledby="briefPresence">
+<h2 id="briefPresence" data-key="briefPresence">8. Existing online presence</h2>
+<label for="hasWebsite" data-key="hasWebsite">Do you currently have a website?</label>
+<select id="hasWebsite" name="hasWebsite">
+<option value="" data-key="selectOne" disabled selected>Select one</option>
+<option value="yes" data-key="briefYes">Yes</option>
+<option value="no" data-key="briefNo">No</option>
+</select>
+
+<label for="existingWebsite" data-key="existingWebsite">Existing website URL (Optional)</label>
+<input type="url" id="existingWebsite" name="existingWebsite">
+
+<label for="socialMediaLinks" data-key="socialMediaLinks">Social media links you would like displayed</label>
+<textarea id="socialMediaLinks" name="socialMediaLinks"></textarea>
+
+<label for="googleBusinessProfile" data-key="googleBusinessProfile">Google Business Profile URL (if applicable)</label>
+<input type="url" id="googleBusinessProfile" name="googleBusinessProfile">
+
+<!-- DOMAIN NAME AND REGISTRATION -->
+
+<label for="preferredDomain" data-key="preferredDomain">Do you have a preferred domain name? (Optional)</label>
+<input type="text" id="preferredDomain" name="preferredDomain">
+
+<label for="domainStatus" data-key="domainStatus">What is the status of your domain name?</label>
+<select id="domainStatus" name="domainStatus">
+<option value="" data-key="selectOne" disabled selected>Select one</option>
+<option value="owned" data-key="domainOwned">I already own a domain name</option>
+<option value="register" data-key="domainRegister">I need assistance registering a domain name</option>
+<option value="undecided" data-key="domainUndecided">I would like recommendations</option>
+</select>
+</section>
+
+<!-- LANGUAGE -->
+<section class="brief-section" aria-labelledby="briefLanguage">
+<h2 id="briefLanguage" data-key="briefLanguage">9. Language</h2>
+<label for="websiteLanguages" data-key="websiteLanguages">Which languages should your website support?</label>
+<select id="websiteLanguages" name="websiteLanguages" required>
+<option value="" data-key="selectOne" disabled selected>Select one</option>
+<option value="en" data-key="languageEnglish">English</option>
+<option value="fr" data-key="languageFrench">French</option>
+<option value="en-fr" data-key="languageBilingual">English and French</option>
+<option value="other" data-key="briefOtherLanguage">Other</option>
+</select>
+
+<label for="otherLanguages" data-key="otherLanguages">Other languages requested (Optional)</label>
+<input type="text" id="otherLanguages" name="otherLanguages">
+</section>
+
+<!-- ADDITIONAL INFORMATION -->
+<section class="brief-section" aria-labelledby="briefFinal">
+<h2 id="briefFinal" data-key="briefFinal">10. Additional information</h2>
+<label for="targetLaunchDate" data-key="targetLaunchDate">What is your preferred launch date? (Optional)</label>
+<input type="date" id="targetLaunchDate" name="targetLaunchDate">
+
+<label for="aiRestrictions" data-key="aiRestrictions">Do you have any restrictions on AI use? (Optional)</label>
+<textarea id="aiRestrictions" name="aiRestrictions"></textarea>
+
+<label for="additionalRequirements" data-key="additionalRequirements">Is there anything else you would like us to know about your business or your vision for the website?</label>
+<textarea id="additionalRequirements" name="additionalRequirements"></textarea>
+</section>
+
+                <!-- SUBMIT WEBSITE BRIEF -->
+                <button type="submit" id="submitBrief" data-key="submitBrief">Submit website brief</button>
+                <p id="briefSubmissionStatus" role="status" hidden><span data-key="briefSubmissionUnavailable">Your form is complete. Online submission is not yet available; your answers have not been sent.</span></p>
+            </form>
+         
+        </section>
+    </section>
+</main>
+</body>
+</html>

@@ -19,6 +19,16 @@ export const analytics = isSupported().then((supported) =>
 );
 
 export const auth = getAuth(app);
+const homeGuestActions = document.getElementById("homeGuestActions");
+const homeDashboardButton = document.getElementById("homeDashboardBtn");
+
+if (homeGuestActions && homeDashboardButton) {
+    onAuthStateChanged(auth, (user) => {
+        homeGuestActions.hidden = Boolean(user);
+        homeDashboardButton.hidden = !user;
+    });
+}
+
 const accountCreationForm = document.getElementById("accountCreationForm");
 
 if (accountCreationForm) {
@@ -172,6 +182,48 @@ if (dashboardUserName) {
         const displayName = user?.displayName?.trim()
             || user?.email?.split("@")[0]
             || "there";
-        dashboardUserName.textContent = displayName.split(/\s+/)[0];
+        const firstName = displayName.split(/\s+/)[0];
+        dashboardUserName.textContent = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+    });
+}
+
+document.querySelectorAll("[data-dropzone]").forEach((dropzone) => {
+    const fileInput = dropzone.querySelector('input[type="file"]');
+    const fileNameList = dropzone.querySelector(".file-name-list");
+
+    if (!fileInput || !fileNameList) {
+        return;
+    }
+
+    const displayFileNames = () => {
+        fileNameList.textContent = Array.from(fileInput.files, (file) => file.name).join(", ");
+    };
+
+    fileInput.addEventListener("change", displayFileNames);
+    dropzone.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        dropzone.classList.add("is-dragging");
+    });
+    dropzone.addEventListener("dragleave", () => {
+        dropzone.classList.remove("is-dragging");
+    });
+    dropzone.addEventListener("drop", (event) => {
+        event.preventDefault();
+        dropzone.classList.remove("is-dragging");
+
+        if (event.dataTransfer?.files) {
+            fileInput.files = event.dataTransfer.files;
+            fileInput.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+    });
+});
+// WEBSITE BRIEF SUBMISSION
+const quickScriptForm = document.getElementById("quickScriptForm");
+
+if (quickScriptForm) {
+    quickScriptForm.addEventListener("submit", (event) => {
+        // Keep answers on the page until order submission is connected.
+        event.preventDefault();
+        document.getElementById("briefSubmissionStatus").hidden = false;
     });
 }

@@ -14,16 +14,21 @@
 <body>
 <main class="page page-home">
     <section class="card text-center">
-        <div class="lang-box">
-            <button id="lang-toggle" class="lang-btn">EN / FR</button>
+        <div class="page-header">
+            <div class="lang-box">
+                <button id="lang-toggle" class="lang-btn">EN / FR</button>
+            </div>
         </div>
         <br>
         <h1>ScriptFuse</h1>
         <p data-key="Slogan"></p>
         <br>
         <p data-key="descriptionSF"></p>
-        <a data-key="getStarted" id="accountCreationBtn" class="btn btn-primary" href="accountCreation.html">Get Started</a>
-        <p><span data-key="haveAccount">Already have an account?</span> <a data-key="loginLink" href="login.html">Log in</a></p>
+        <div id="homeGuestActions" hidden>
+            <a data-key="createAccnt" id="accountCreationBtn" class="btn btn-primary" href="accountCreation.html">Get Started</a>
+            <p><span data-key="haveAccount">Already have an account?</span> <a data-key="loginLink" href="login.html">Log in</a></p>
+        </div>
+        <a data-key="dashboard" id="homeDashboardBtn" class="btn btn-primary" href="userDashboard.html" hidden>Dashboard</a>
     </section>
 </main>
 </body>

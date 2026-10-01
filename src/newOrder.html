@@ -14,8 +14,11 @@
 <body>
 <main class="page page-New order">
     <section class="card text-center">
-        <div class="lang-box">
-            <button type="button" id="lang-toggle" class="lang-btn">EN / FR</button>
+        <div class="page-header">
+            <a class="homeBtn" data-key="homeBtn" href="index.html">Home</a>
+            <div class="lang-box">
+                <button type="button" id="lang-toggle" class="lang-btn">EN / FR</button>
+            </div>
         </div>
         <h1>ScriptFuse</h1>
         <p data-key="Slogan"></p>
@@ -25,74 +28,7 @@
             <p><span data-key="newOrder">New order</span></p>
         
             <form id="newOrder">
-                <label for="companyName" data-key="companyName">Company name</label>
-                <input type="text" id="companyName" name="companyName" autocomplete="Your company" required>
-                <br><br>
 
-                <label for="companyType" data-key="companyType">Company type</label>
-
-                <select id="companyType" name="companyType" required>
-                    <option value="" data-key="selectOne" disabled selected>Select one</option>
-                    <option value="retail" data-key="industryRetail">Retail store</option>
-                    <option value="ecommerce" data-key="industryEcommerce">Online shop</option>
-                    <option value="fashion" data-key="industryFashion">Fashion / Accessories</option>
-                    <option value="handmade" data-key="industryHandmade">Handmade products</option>
-                    <option value="restaurant" data-key="industryRestaurant">Restaurant</option>
-                    <option value="cafe" data-key="industryCafe">Café</option>
-                    <option value="bakery" data-key="industryBakery">Bakery / Pastry shop</option>
-                    <option value="catering" data-key="industryCatering">Catering</option>
-                    <option value="food-truck" data-key="industryFoodTruck">Food truck</option>
-                    <option value="hair" data-key="industryHair">Hair salon / Barber</option>
-                    <option value="beauty" data-key="industryBeauty">Beauty / Cosmetics</option>
-                    <option value="nails" data-key="industryNails">Nail salon</option>
-                    <option value="spa" data-key="industrySpa">Spa / Massage therapy</option>
-                    <option value="fitness" data-key="industryFitness">Gym / Personal training</option>
-                    <option value="yoga" data-key="industryYoga">Yoga / Pilates</option>
-                    <option value="healthcare" data-key="industryHealthcare">Healthcare clinic</option>
-                    <option value="dental" data-key="industryDental">Dental clinic</option>
-                    <option value="therapy" data-key="industryTherapy">Counselling / Therapy</option>
-                    <option value="nutrition" data-key="industryNutrition">Nutrition services</option>
-                    <option value="construction" data-key="industryConstruction">Construction / Renovation</option>
-                    <option value="electrician" data-key="industryElectrician">Electrical services</option>
-                    <option value="plumbing" data-key="industryPlumbing">Plumbing</option>
-                    <option value="hvac" data-key="industryHvac">Heating / Air conditioning</option>
-                    <option value="landscaping" data-key="industryLandscaping">Landscaping / Gardening</option>
-                    <option value="cleaning" data-key="industryCleaning">Cleaning services</option>
-                    <option value="interior-design" data-key="industryInteriorDesign">Interior design</option>
-                    <option value="architecture" data-key="industryArchitecture">Architecture</option>
-                    <option value="real-estate" data-key="industryRealEstate">Real estate</option>
-                    <option value="property-management" data-key="industryPropertyManagement">Property management</option>
-                    <option value="accounting" data-key="industryAccounting">Accounting / Bookkeeping</option>
-                    <option value="legal" data-key="industryLegal">Legal services</option>
-                    <option value="finance" data-key="industryFinance">Financial services</option>
-                    <option value="insurance" data-key="industryInsurance">Insurance</option>
-                    <option value="consulting" data-key="industryConsulting">Business consulting</option>
-                    <option value="marketing" data-key="industryMarketing">Marketing / Advertising</option>
-                    <option value="technology" data-key="industryTechnology">Technology / IT services</option>
-                    <option value="photography" data-key="industryPhotography">Photography / Videography</option>
-                    <option value="graphic-design" data-key="industryGraphicDesign">Graphic design</option>
-                    <option value="arts" data-key="industryArts">Artist / Art gallery</option>
-                    <option value="music" data-key="industryMusic">Music / Entertainment</option>
-                    <option value="writing" data-key="industryWriting">Writing / Publishing</option>
-                    <option value="events" data-key="industryEvents">Event planning</option>
-                    <option value="weddings" data-key="industryWeddings">Wedding services</option>
-                    <option value="education" data-key="industryEducation">Education / Training</option>
-                    <option value="tutoring" data-key="industryTutoring">Tutoring / Language lessons</option>
-                    <option value="childcare" data-key="industryChildcare">Childcare / Daycare</option>
-                    <option value="sports" data-key="industrySports">Sports club / Coaching</option>
-                    <option value="pets" data-key="industryPets">Pet care / Grooming</option>
-                    <option value="veterinary" data-key="industryVeterinary">Veterinary services</option>
-                    <option value="automotive" data-key="industryAutomotive">Auto repair / Detailing</option>
-                    <option value="transport" data-key="industryTransport">Transportation / Delivery</option>
-                    <option value="travel" data-key="industryTravel">Travel / Tourism</option>
-                    <option value="accommodation" data-key="industryAccommodation">Hotel / Vacation rental</option>
-                    <option value="manufacturing" data-key="industryManufacturing">Manufacturing</option>
-                    <option value="agriculture" data-key="industryAgriculture">Agriculture / Farming</option>
-                    <option value="nonprofit" data-key="industryNonprofit">Nonprofit / Charity</option>
-                    <option value="community" data-key="industryCommunity">Community organization</option>
-                    <option value="personal" data-key="industryPersonal">Personal portfolio / Blog</option>
-                    <option value="other" data-key="industryOther">Other</option>
-                </select>
                 <br><br>
 
                 <div id="otherCompanyTypeField" hidden>
@@ -120,9 +56,9 @@
                             <li data-key="oneRevision">One revision round</li>
                         </ul>
 
-                        <button type="button" data-package="quick" data-key="selectQuick">
-                            Select Quick Script
-                        </button>
+                        <a class="button" data-key="selectQuick" href="quickScriptPackage.html">Select Quick Script</a>
+                            
+                        
                     </article>
 
                     <article class="package-card">
@@ -149,14 +85,14 @@
                         <header class="package-header">
                             <h2 data-key="customWebsite">Custom Website</h2>
                             <p data-key="customPrice">Price based on your selections</p>
-                            <br>
+                            
                         </header>
 
                         <ul>
                             <li data-key="choosePages">Choose your pages</li>
                             <li data-key="addFeatures">Add the features you need</li>
                             <li data-key="customFunctionality">Request custom functionality</li>
-                            <p data-key="startingPrice">Starting as low as 600$ + tax</p>
+                            <li data-key="startingPrice">Starting as low as 600$ + tax</li>
                         </ul>
 
                         <button type="button" data-package="custom" data-key="buildPackage">

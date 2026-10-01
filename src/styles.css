@@ -42,11 +42,11 @@ a {
 }
 
 .homeBtn {
-    display: block;
-    text-align: right;
+    display: inline-block;
+    text-align: left;
 }
 
-.page-faq .faq-header {
+.page-header {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -56,8 +56,12 @@ a {
     direction: ltr;
 }
 
-.page-faq .faq-header > .homeBtn {
-    margin: 0 auto 0 0;
+.page-header .lang-box {
+    margin-left: auto;
+}
+
+.page-home .page-header {
+    justify-content: flex-end;
 }
 
 button,
@@ -136,6 +140,86 @@ textarea {
     resize: vertical;
 }
 
+.quick-script-form {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.quick-script-form > label:not(.file-dropzone),
+.choice-group {
+    margin-top: 22px;
+}
+
+.choice-group {
+    padding: 0;
+    border: 0;
+}
+
+.choice-group legend {
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.choice-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+}
+
+.choice-options label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+.choice-options input {
+    width: auto;
+    margin: 0;
+}
+
+.file-dropzone {
+    position: relative;
+    display: flex;
+    min-height: 120px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 18px;
+    padding: 20px;
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 150ms ease, background 150ms ease;
+}
+
+.file-dropzone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.file-dropzone:focus-within,
+.file-dropzone.is-dragging {
+    border-color: var(--primary);
+    background: #eaf1ff;
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.file-name-list {
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
 :focus-visible {
     outline: 3px solid var(--accent);
     outline-offset: 3px;
@@ -208,7 +292,8 @@ textarea {
     font-weight: bold;
 }
 
-.package-card button {
+.package-card button,
+.package-card > .button {
     margin: 0 24px 24px;
 }
 
@@ -216,4 +301,36 @@ textarea {
     .package-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* WEBSITE BRIEF SECTIONS */
+.quick-script-form .brief-section {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+}
+
+.quick-script-form .brief-section:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+}
+
+.brief-section h2 {
+    font-size: 1.25rem;
+    margin: 0 0 18px;
+}
+
+.brief-section > label:not(.file-dropzone) {
+    margin-top: 22px;
+}
+
+.quick-script-form .form-help {
+    margin: 8px 0 0;
+    font-size: 0.9rem;
+}
+
+/* WEBSITE BRIEF SUBMIT BUTTON */
+.quick-script-form > button[type="submit"] {
+    margin-top: 24px;
 }
