@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
-import { createUserWithEmailAndPassword, getAuth, updateProfile } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBrSbHqKRuHiihQ71oNx4dm5lHT05t7gAI",
@@ -18,7 +18,7 @@ export const analytics = isSupported().then((supported) =>
     supported ? getAnalytics(app) : null
 );
 
-const auth = getAuth(app);
+export const auth = getAuth(app);
 const accountCreationForm = document.getElementById("accountCreationForm");
 
 if (accountCreationForm) {
@@ -87,5 +87,76 @@ if (accountCreationForm) {
             statusMessage.textContent = errorMessages[error.code] || text.generic;
             submitButton.disabled = false;
         }
+    });
+}
+
+const loginForm = document.getElementById("loginForm");
+
+if (loginForm) {
+    const submitButton = document.getElementById("loginBtn");
+    const statusMessage = document.getElementById("loginStatus");
+    const messages = {
+        en: {
+            signingIn: "Signing in...",
+            invalidCredentials: "Email or password is incorrect.",
+            providerDisabled: "Email and password sign-in is not enabled for this project.",
+            tooManyRequests: "Too many attempts. Try again later.",
+            networkError: "Network error. Check your connection and try again.",
+            generic: "Could not sign in. Please try again."
+        },
+        fr: {
+            signingIn: "Connexion...",
+            invalidCredentials: "L'adresse courriel ou le mot de passe est incorrect.",
+            providerDisabled: "La connexion par courriel et mot de passe n'est pas activée pour ce projet.",
+            tooManyRequests: "Trop de tentatives. Réessayez plus tard.",
+            networkError: "Erreur réseau. Vérifiez votre connexion et réessayez.",
+            generic: "Impossible de se connecter. Veuillez réessayer."
+        }
+    };
+
+    loginForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const language = document.documentElement.lang === "fr" ? "fr" : "en";
+        const text = messages[language];
+        const email = document.getElementById("emailAddress").value.trim();
+        const password = document.getElementById("passWord").value;
+
+        submitButton.disabled = true;
+        statusMessage.textContent = text.signingIn;
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            window.location.assign("userDashboard.html");
+        } catch (error) {
+            const errorMessages = {
+                "auth/invalid-credential": text.invalidCredentials,
+                "auth/invalid-email": text.invalidCredentials,
+                "auth/user-disabled": text.invalidCredentials,
+                "auth/user-not-found": text.invalidCredentials,
+                "auth/wrong-password": text.invalidCredentials,
+                "auth/operation-not-allowed": text.providerDisabled,
+                "auth/too-many-requests": text.tooManyRequests,
+                "auth/network-request-failed": text.networkError
+            };
+            statusMessage.textContent = errorMessages[error.code] || text.generic;
+            submitButton.disabled = false;
+        }
+    });
+}
+
+const dashboardUserName = document.getElementById("dashboardUserName");
+
+if (dashboardUserName) {
+    onAuthStateChanged(auth, (user) => {
+        if (!user) {
+            window.location.replace("login.html");
+            return;
+        }
+
+        const displayName = user?.displayName?.trim()
+            || user?.email?.split("@")[0]
+            || "there";
+        dashboardUserName.textContent = displayName.split(/\s+/)[0];
     });
 }

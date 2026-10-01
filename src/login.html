@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="translation.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <title>ScriptFuse</title>
+    <link rel="stylesheet" href="styles.css?v=3">
+</head>
+<body>
+<main class="page page-home">
+    <section class="card text-center">
+        <div class="lang-box">
+            <button type="button" id="lang-toggle" class="lang-btn">EN / FR</button>
+        </div>
+        <h1>ScriptFuse</h1>
+        <p data-key="Slogan"></p>
+        <section class="card text-center">
+            <h2 data-key="loginTitle">Log in</h2>
+            <form id="loginForm">
+                <label for="emailAddress" data-key="emailAddress">Email address</label>
+                <input type="email" id="emailAddress" name="emailAddress" autocomplete="email" required>
+                <br>
+                <br>
+                <label for="passWord" data-key="passWord">Password</label>
+                <input type="password" id="passWord" name="passWord" autocomplete="current-password" required>
+                <p id="loginStatus" role="status" aria-live="polite"></p>
+                <button type="submit" id="loginBtn" class="button" data-key="loginButton">Log in</button>
+            </form>
+            <p data-key="noAccount">Don't have an account?</p>
+            <a href="accountCreation.html" data-key="createAccountLink">Create an account</a>
+        </section>
+    </section>
+</main>
+</body>
+</html>
