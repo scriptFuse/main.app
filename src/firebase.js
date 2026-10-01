@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBrSbHqKRuHiihQ71oNx4dm5lHT05t7gAI",
@@ -146,6 +146,21 @@ if (loginForm) {
 }
 
 const dashboardUserName = document.getElementById("dashboardUserName");
+const logoutButton = document.getElementById("logoutBtn");
+
+if (logoutButton) {
+    logoutButton.addEventListener("click", async () => {
+        logoutButton.disabled = true;
+
+        try {
+            await signOut(auth);
+            window.location.assign("login.html");
+        } catch (error) {
+            console.error("Could not sign out.", error);
+            logoutButton.disabled = false;
+        }
+    });
+}
 
 if (dashboardUserName) {
     onAuthStateChanged(auth, (user) => {

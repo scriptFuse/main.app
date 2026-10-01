@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="translation.js?v=2"></script>
+    <script src="faq.js" defer></script>
+    <script type="module" src="firebase.js"></script>
+    <title>ScriptFuse</title>
+    <link rel="stylesheet" href="styles.css?v=6">
+</head>
+<body>
+<main class="page page-faq">
+    
+    <section class="card text-center">
+        <div class="faq-header">
+            <a class="homeBtn" data-key="homeBtn" href="index.html">Home</a>
+            <div class="lang-box">
+                <button type="button" id="lang-toggle" class="lang-btn">EN / FR</button>
+            </div>
+        </div>
+        
+        
+        
+        <h1>ScriptFuse</h1>
+        <p data-key="Slogan"></p>
+        <section class="card text-center">
+            <p data-key="faq"></p>
+
+
+            <div class="accordion" id="accordionFAQ">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" aria-expanded="false" aria-controls="collapseOne" data-key="faqFeatures">
+                        Can I request special features?
+                    </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse" aria-labelledby="headingOne" hidden>
+                    <div class="accordion-body">
+                        <strong data-key="yes">Yes.</strong> <span data-key="faqFeaturesAnswer">You can request special features when you select a custom package. After the package selection you will be given basic options to select from and a prompt box where you can explain what you would like. Once the order is in, someone will reply to your request with a price estimate, you can then choose to move forward with the project or not.</span>
+                    </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button" type="button" aria-expanded="false" aria-controls="collapseTwo" data-key="faqPreview">
+                        Can I view the website before it goes live?
+                    </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse" aria-labelledby="headingTwo" hidden>
+                    <div class="accordion-body">
+                        <strong data-key="yes">Yes.</strong> <span data-key="faqPreviewAnswer">You will be able to view the website before its launch and you will be able to request changes. The number of allowed changes will depend on the package selected.</span>
+                    </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button" type="button" aria-expanded="false" aria-controls="collapseThree" data-key="faqMaintenance">
+                        Can there be maintenance on the website?
+                    </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse" aria-labelledby="headingThree" hidden>
+                    <div class="accordion-body">
+                        <strong data-key="yes">Yes.</strong> <span data-key="faqMaintenanceAnswer">It is possible to request website updates and maintenance periodically or as needed.</span>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </section>
+</main>
+</body>
+</html>

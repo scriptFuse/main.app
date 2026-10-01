@@ -41,6 +41,25 @@ a {
     text-underline-offset: 3px;
 }
 
+.homeBtn {
+    display: block;
+    text-align: right;
+}
+
+.page-faq .faq-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    direction: ltr;
+}
+
+.page-faq .faq-header > .homeBtn {
+    margin: 0 auto 0 0;
+}
+
 button,
 .button {
     display: inline-flex;
@@ -125,5 +144,76 @@ textarea {
 @media (prefers-reduced-motion: reduce) {
     button, .button {
         transition: none;
+    }
+}
+
+.package-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    max-width: 1100px;
+    margin: 32px auto;
+}
+
+.package-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgb(23 43 77 / 12%);
+}
+
+.package-header {
+    padding: 24px;
+    background: linear-gradient(135deg, #0052cc, #2684ff);
+    color: white;
+}
+
+.package-card:nth-child(2) .package-header {
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+}
+
+.package-card:nth-child(3) .package-header {
+    background: linear-gradient(135deg, #00875a, #00a389);
+}
+
+.package-header h2 {
+    margin: 0 0 12px;
+    color: white;
+    font-size: 20px;
+}
+
+.package-header p {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.package-card ul {
+    flex: 1;
+    margin: 0;
+    padding: 24px;
+    list-style: none;
+}
+
+.package-card li {
+    margin-bottom: 14px;
+}
+
+.package-card li::before {
+    content: "✓";
+    margin-right: 10px;
+    color: var(--success, #00875a);
+    font-weight: bold;
+}
+
+.package-card button {
+    margin: 0 24px 24px;
+}
+
+@media (max-width: 800px) {
+    .package-grid {
+        grid-template-columns: 1fr;
     }
 }

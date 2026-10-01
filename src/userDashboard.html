@@ -4,7 +4,7 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="module" src="translation.js"></script>
+    <script type="module" src="translation.js?v=2"></script>
     <script type="module" src="firebase.js"></script>
     <title>ScriptFuse</title>
     
@@ -12,16 +12,31 @@
     <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
-<main class="page page-home">
+<main class="page page-User Dashboard">
     <section class="card text-center">
+        <div class="lang-box">
+            <button type="button" id="lang-toggle" class="lang-btn">EN / FR</button>
+        </div>
         <h1>ScriptFuse</h1>
         <p data-key="Slogan"></p>
         <br>
         
         <section class="card text-center">
             <p><span data-key="hi"></span><span id="dashboardUserName"></span></p>
-        </section>
         
+            <br>
+            <a data-key="newOrder" id="newOrder" class="btn btn-primary" href="newOrder.html">New order</a>
+            <br><br>
+            <a data-key="currentOrders" id="currentOrders" class="btn btn-primary" href="currentOrders.html">Current orders</a>
+            <br><br>
+            <a data-key="requestedInfo" id="requestedInfo" class="btn btn-primary" href="requestedInfo.html">Requested info</a>
+            <br><br>
+            <a data-key="pastOrders" id="pastOrders" class="btn btn-primary" href="pastOrders.html">Past orders</a>
+
+
+        </section>
+        <br><br>
+        <button id="logoutBtn" type="button" data-key="logout"></button>
 
     </section>
 
