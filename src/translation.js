@@ -67,6 +67,7 @@ export const translation = {
     goalContact: "Allow customers to contact me",
     goalLeads: "Generate leads",
     goalPresent: "Present my business",
+    selectWebsiteGoal: "Select a goal",
     websiteGoal: "What is the main purpose of your website?",
     briefBusiness: "1. Business information",
     publicEmail: "Public business email address (Optional)",
@@ -82,6 +83,8 @@ export const translation = {
     domainOwned: "I already own a domain name",
 
     domainRegister: "I need assistance registering a domain name",
+
+    domainRegisterForMe: "Please manage the domain registration on my behalf",
 
     domainUndecided: "I would like recommendations",
     aiPermissions: "Artificial intelligence (AI) permissions",
@@ -367,6 +370,7 @@ export const translation = {
     goalContact: "Permettre aux clients de me contacter",
     goalLeads: "Attirer des clients potentiels",
     goalPresent: "Pr\u00e9senter mon entreprise",
+    selectWebsiteGoal: "S\u00e9lectionnez l\u2019objectif",
     websiteGoal: "Quel est l\u2019objectif principal de votre site web?",
     briefBusiness: "1. Renseignements sur l\u2019entreprise",
     publicEmail: "Adresse courriel publique (Facultatif)",
@@ -382,6 +386,8 @@ export const translation = {
     domainOwned: "Je poss\u00e8de d\u00e9j\u00e0 un nom de domaine",
 
     domainRegister: "J\u2019ai besoin d\u2019aide pour enregistrer un nom de domaine",
+
+    domainRegisterForMe: "Veuillez prendre en charge l\u2019enregistrement du nom de domaine pour moi",
 
     domainUndecided: "Je souhaite recevoir des recommandations",
     aiPermissions: "Autorisations relatives à l’intelligence artificielle (IA)",
@@ -556,7 +562,7 @@ export const translation = {
     accountCreation: "Création d'un nouveau compte ",
     selecPackage: "Choisissez un forfait",
     minPackage: "Site web de base",
-    selectOne: "Sélectionnez un forfait",
+    selectOne: "Sélectionnez une option",
     faq: "Questions fréquemment posées",
     FAQ: "QFP",
     homeBtn: "Accueil",
