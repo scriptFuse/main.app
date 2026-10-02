@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScriptFuse — Order details</title>
+    <link rel="stylesheet" href="styles.css?v=8">
+    <script type="module" src="orders.js?v=2"></script>
+</head>
+<body>
+<main class="page orders-page card">
+    <div class="page-header">
+        <a href="currentOrders.html" data-key="currentOrders">Current orders</a>
+        <button type="button" id="lang-toggle" class="lang-btn">EN / FR</button>
+    </div>
+    <h1 data-key="orderDetails">Order details</h1>
+    <p id="orderStatus" role="status" data-key="ordersLoading">Loading…</p>
+    <section id="savedOrder" hidden>
+        <h2 id="orderName"></h2>
+        <p data-key="briefSubmissionSuccess">Your request has been submitted. A developer will review it and reply.</p>
+        <dl id="savedOrderDetails" class="brief-review-details"></dl>
+        <a id="orderMessagesLink" class="button" data-key="orderMessages">Messages</a>
+    </section>
+</main>
+</body>
+</html>

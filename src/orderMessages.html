@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScriptFuse — Messages</title>
+    <link rel="stylesheet" href="styles.css?v=8">
+    <script type="module" src="orders.js?v=2"></script>
+</head>
+<body>
+<main class="page orders-page card">
+    <div class="page-header">
+        <a href="currentOrders.html" data-key="currentOrders">Current orders</a>
+        <button type="button" id="lang-toggle" class="lang-btn">EN / FR</button>
+    </div>
+    <h1 data-key="orderMessages">Messages</h1>
+    <p id="orderStatus" role="status" data-key="ordersLoading">Loading…</p>
+    <section id="savedOrder" hidden>
+        <h2 id="orderName"></h2>
+        <a id="orderDetailsLink" data-key="orderDetails">Order details</a>
+        <p id="messagesStatus" role="status" data-key="ordersLoading">Loading…</p>
+        <div id="messageThread" class="message-thread" role="log" aria-live="polite" aria-label="Messages"></div>
+        <form id="messageForm">
+            <label for="messageText" data-key="messageLabel">Your question or message</label>
+            <textarea id="messageText" name="message" required maxlength="5000" rows="4"></textarea>
+            <button id="sendMessage" type="submit" data-key="sendMessage" disabled>Send message</button>
+            <p id="sendStatus" role="status" hidden></p>
+        </form>
+    </section>
+</main>
+</body>
+</html>

@@ -4,12 +4,12 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="module" src="translation.js?v=2"></script>
-    <script type="module" src="firebase.js"></script>
+    <script type="module" src="translation.js?v=4"></script>
+    <script type="module" src="firebase.js?v=6"></script>
     <title>ScriptFuse</title>
     
 
-    <link rel="stylesheet" href="styles.css?v=3">
+    <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
 <main class="page page-User Dashboard">
@@ -24,7 +24,7 @@
         <br>
         
         <section class="card text-center">
-            <p><span data-key="hi"></span><span id="dashboardUserName"></span></p>
+            <p><span data-key="hi"></span><span id="dashboardUserName"></span><span id="dashboardUserRole" class="dashboard-role" hidden></span></p>
         
             <br>
             <a data-key="newOrder" id="newOrder" class="btn btn-primary" href="newOrder.html">New order</a>
@@ -34,6 +34,8 @@
             <a data-key="requestedInfo" id="requestedInfo" class="btn btn-primary" href="requestedInfo.html">Requested info</a>
             <br><br>
             <a data-key="pastOrders" id="pastOrders" class="btn btn-primary" href="pastOrders.html">Past orders</a>
+            <br><br>
+            <button type="button" id="editProfileBtn" class="button-secondary" data-key="editProfile">Edit profile</button>
 
 
         </section>
@@ -43,5 +45,32 @@
     </section>
 
 </main>
+
+<dialog id="profileDialog" class="profile-dialog" aria-labelledby="profileDialogTitle">
+    <form id="profileForm">
+        <h2 id="profileDialogTitle" data-key="editProfile">Edit profile</h2>
+        <label for="profileName" data-key="profileName">Name</label>
+        <input id="profileName" name="name" type="text" autocomplete="name" required>
+
+        <label for="profileEmail" data-key="profileEmail">Email address</label>
+        <input id="profileEmail" name="email" type="email" autocomplete="email" required>
+
+        <p class="form-help" data-key="profileCredentialHelp">Enter your current password to change your email or password.</p>
+        <label for="profileCurrentPassword" data-key="profileCurrentPassword">Current password</label>
+        <input id="profileCurrentPassword" name="currentPassword" type="password" autocomplete="current-password">
+
+        <label for="profileNewPassword" data-key="profileNewPassword">New password (optional)</label>
+        <input id="profileNewPassword" name="newPassword" type="password" autocomplete="new-password" minlength="6">
+
+        <label for="profileConfirmPassword" data-key="profileConfirmPassword">Confirm new password</label>
+        <input id="profileConfirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="6">
+
+        <p id="profileStatus" role="status" aria-live="polite" hidden></p>
+        <div class="profile-dialog-actions">
+            <button type="button" id="closeProfileDialog" class="button-secondary" data-key="cancel">Cancel</button>
+            <button type="submit" id="saveProfileBtn" data-key="saveChanges">Save changes</button>
+        </div>
+    </form>
+</dialog>
 </body>
 </html>

@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="module" src="translation.js?v=7"></script>
-    <script type="module" src="firebase.js?v=3"></script>
+    <script type="module" src="translation.js?v=9"></script>
+    <script type="module" src="firebase.js?v=5"></script>
     <title>ScriptFuse</title>
-    <link rel="stylesheet" href="styles.css?v=6">
+    <link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
 <main class="page page-Quick Script Package">
@@ -349,8 +349,23 @@
 
                 <!-- SUBMIT WEBSITE BRIEF -->
                 <button type="submit" id="submitBrief" data-key="submitBrief">Submit website brief</button>
-                <p id="briefSubmissionStatus" role="status" hidden><span data-key="briefSubmissionUnavailable">Your form is complete. Online submission is not yet available; your answers have not been sent.</span></p>
             </form>
+
+            <section id="briefReview" class="brief-review" aria-labelledby="briefReviewTitle" hidden>
+                <h2 id="briefReviewTitle" tabindex="-1" data-key="briefReviewTitle">Review your request</h2>
+                <h2 id="briefSubmittedTitle" tabindex="-1" data-key="briefSubmittedTitle" hidden>Request submitted</h2>
+                <p id="briefReviewIntro" data-key="briefReviewIntro">Please review your order details before confirming.</p>
+                <dl id="briefReviewDetails" class="brief-review-details"></dl>
+                <p id="briefReviewFollowup" data-key="briefReviewFollowup">After you confirm, a developer will review your request and reply. You can view their message in your dashboard under Current orders.</p>
+                <p id="briefReviewError" role="alert" data-key="briefSubmissionError" hidden>We could not submit your request. Please try again.</p>
+                <div id="briefReviewActions" class="brief-review-actions">
+                    <button type="button" id="editBrief" class="button-secondary" data-key="editBrief">Edit</button>
+                    <button type="button" id="confirmBrief" data-key="confirmBrief">Confirm request</button>
+                </div>
+                <p id="briefReviewSuccess" role="status" data-key="briefSubmissionSuccess" hidden>Your request has been submitted. A developer will review it and reply. You can view their message in your dashboard under Current orders.</p>
+                <a id="submittedOrderLink" class="button" data-key="orderDetails" hidden>Order details</a>
+                <a id="briefReviewDashboard" class="button" href="currentOrders.html" data-key="currentOrders" hidden>Current orders</a>
+            </section>
          
         </section>
     </section>

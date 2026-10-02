@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+import { createUserWithEmailAndPassword, EmailAuthProvider, getAuth, onAuthStateChanged, reauthenticateWithCredential, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+import { translation } from "./translation.js";
 import {
     getFirestore,
     collection,
@@ -168,6 +169,7 @@ if (loginForm) {
 }
 
 const dashboardUserName = document.getElementById("dashboardUserName");
+const dashboardUserRole = document.getElementById("dashboardUserRole");
 const logoutButton = document.getElementById("logoutBtn");
 
 if (logoutButton) {
@@ -185,7 +187,9 @@ if (logoutButton) {
 }
 
 if (dashboardUserName) {
-    onAuthStateChanged(auth, (user) => {
+    let dashboardAuthGeneration = 0;
+    onAuthStateChanged(auth, async (user) => {
+        const generation = ++dashboardAuthGeneration;
         if (!user) {
             window.location.replace("login.html");
             return;
@@ -196,6 +200,175 @@ if (dashboardUserName) {
             || "there";
         const firstName = displayName.split(/\s+/)[0];
         dashboardUserName.textContent = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+
+        dashboardUserRole.hidden = true;
+        dashboardUserRole.textContent = "";
+        delete dashboardUserRole.dataset.key;
+        try {
+            const { claims } = await user.getIdTokenResult(true);
+            if (generation !== dashboardAuthGeneration) return;
+            const role = claims.admin === true
+                ? "adminRole"
+                : claims.developer === true
+                    ? "developerRole"
+                    : null;
+            if (role) {
+                const language = document.documentElement.lang === "fr" ? "fr" : "en";
+                dashboardUserRole.dataset.key = role;
+                dashboardUserRole.textContent = ` (${translation[language][role]})`;
+                dashboardUserRole.hidden = false;
+            }
+        } catch (error) {
+            if (generation !== dashboardAuthGeneration) return;
+            console.error("Could not load the user's role from Firebase.", error);
+        }
+    });
+}
+
+const profileDialog = document.getElementById("profileDialog");
+const profileForm = document.getElementById("profileForm");
+
+if (profileDialog && profileForm) {
+    const profileName = document.getElementById("profileName");
+    const profileEmail = document.getElementById("profileEmail");
+    const currentPassword = document.getElementById("profileCurrentPassword");
+    const newPassword = document.getElementById("profileNewPassword");
+    const confirmPassword = document.getElementById("profileConfirmPassword");
+    const profileStatus = document.getElementById("profileStatus");
+    const saveProfileButton = document.getElementById("saveProfileBtn");
+    const profileText = (key) => {
+        const language = document.documentElement.lang === "fr" ? "fr" : "en";
+        return translation[language][key] || key;
+    };
+
+    onAuthStateChanged(auth, (user) => {
+        if (!user) {
+            window.location.replace("login.html");
+            return;
+        }
+        profileName.value = user.displayName || "";
+        profileEmail.value = user.email || "";
+    });
+
+    document.getElementById("editProfileBtn").addEventListener("click", () => {
+        profileStatus.hidden = true;
+        const user = auth.currentUser;
+        profileName.value = user?.displayName || "";
+        profileEmail.value = user?.email || "";
+        currentPassword.value = "";
+        newPassword.value = "";
+        confirmPassword.value = "";
+        profileDialog.showModal();
+        profileName.focus();
+    });
+
+    document.getElementById("closeProfileDialog").addEventListener("click", () => {
+        profileDialog.close();
+    });
+
+    profileDialog.addEventListener("close", () => {
+        profileForm.reset();
+        profileStatus.hidden = true;
+    });
+
+    profileForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const user = auth.currentUser;
+        if (!user) {
+            window.location.replace("login.html");
+            return;
+        }
+
+        const displayName = profileName.value.trim();
+        const email = profileEmail.value.trim();
+        const password = newPassword.value;
+        const emailChanged = email !== (user.email || "");
+        const passwordChanged = password.length > 0;
+        const nameChanged = displayName !== (user.displayName || "");
+
+        if ((passwordChanged || confirmPassword.value) && password !== confirmPassword.value) {
+            profileStatus.textContent = profileText("profilePasswordMismatch");
+            profileStatus.hidden = false;
+            return;
+        }
+
+        if (!emailChanged && !passwordChanged && !nameChanged) {
+            profileStatus.textContent = profileText("profileNoChanges");
+            profileStatus.hidden = false;
+            return;
+        }
+
+        saveProfileButton.disabled = true;
+        profileStatus.hidden = true;
+        let completedChanges = 0;
+
+        try {
+            if (emailChanged || passwordChanged) {
+                const supportsPasswordAuth = user.providerData.some(
+                    (provider) => provider.providerId === EmailAuthProvider.PROVIDER_ID
+                );
+                if (!supportsPasswordAuth || !user.email) {
+                    throw new Error("profilePasswordProviderRequired");
+                }
+                if (!currentPassword.value) {
+                    throw new Error("profileCurrentPasswordRequired");
+                }
+
+                const credential = EmailAuthProvider.credential(user.email, currentPassword.value);
+                await reauthenticateWithCredential(user, credential);
+
+                if (emailChanged) {
+                    await updateEmail(user, email);
+                    completedChanges += 1;
+                }
+                if (passwordChanged) {
+                    await updatePassword(user, password);
+                    completedChanges += 1;
+                }
+            }
+
+            if (nameChanged) {
+                await updateProfile(user, { displayName });
+                completedChanges += 1;
+            }
+
+            const firstName = displayName.split(/\s+/)[0];
+            dashboardUserName.textContent = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+            profileEmail.value = user.email || email;
+            profileName.value = user.displayName || displayName;
+            currentPassword.value = "";
+            newPassword.value = "";
+            confirmPassword.value = "";
+            profileStatus.textContent = profileText("profileSaved");
+            profileStatus.hidden = false;
+        } catch (error) {
+            console.error("Could not update the user's profile.", error);
+            const errorKey = error.message === "profilePasswordProviderRequired"
+                ? error.message
+                : error.message === "profileCurrentPasswordRequired"
+                    ? error.message
+                    : error.code === "auth/invalid-credential" || error.code === "auth/wrong-password"
+                        ? "profileIncorrectPassword"
+                        : error.code === "auth/email-already-in-use"
+                            ? "profileEmailInUse"
+                            : error.code === "auth/invalid-email"
+                                ? "profileInvalidEmail"
+                                : error.code === "auth/weak-password"
+                                    ? "profileWeakPassword"
+                                    : error.code === "auth/network-request-failed"
+                                        ? "profileNetworkError"
+                                        : error.code === "auth/requires-recent-login"
+                                            ? "profileReauthRequired"
+                                            : "profileUpdateError";
+            const message = profileText(errorKey);
+            profileStatus.textContent = completedChanges
+                ? `${profileText("profilePartialUpdate")} ${message}`
+                : message;
+            profileStatus.hidden = false;
+        } finally {
+            saveProfileButton.disabled = false;
+        }
     });
 }
 
@@ -233,9 +406,132 @@ document.querySelectorAll("[data-dropzone]").forEach((dropzone) => {
 const quickScriptForm = document.getElementById("quickScriptForm");
 
 if (quickScriptForm) {
+    const briefReview = document.getElementById("briefReview");
+    const briefReviewTitle = document.getElementById("briefReviewTitle");
+    const briefSubmittedTitle = document.getElementById("briefSubmittedTitle");
+    const briefReviewDetails = document.getElementById("briefReviewDetails");
+    const briefReviewIntro = document.getElementById("briefReviewIntro");
+    const briefReviewFollowup = document.getElementById("briefReviewFollowup");
+    const briefReviewError = document.getElementById("briefReviewError");
+    const briefReviewSuccess = document.getElementById("briefReviewSuccess");
+    const briefReviewActions = document.getElementById("briefReviewActions");
+    const briefReviewDashboard = document.getElementById("briefReviewDashboard");
+    const editBriefButton = document.getElementById("editBrief");
+    const confirmBriefButton = document.getElementById("confirmBrief");
+    let briefData;
+
+    const hasAnswer = (value) => {
+        const normalized = String(value).trim();
+        return normalized !== "" && normalized.toLowerCase() !== "n/a";
+    };
+
+    const getBriefData = () => {
+        const formData = new FormData(quickScriptForm);
+        const data = {};
+
+        for (const [key, rawValue] of formData.entries()) {
+            if (rawValue instanceof File) {
+                continue;
+            }
+
+            const value = String(rawValue).trim();
+            if (!hasAnswer(value)) {
+                continue;
+            }
+
+            if (Object.prototype.hasOwnProperty.call(data, key)) {
+                if (!Array.isArray(data[key])) {
+                    data[key] = [data[key]];
+                }
+                data[key].push(value);
+            } else {
+                data[key] = value;
+            }
+        }
+
+        return data;
+    };
+
+    const appendReviewValue = (container, value, key) => {
+        const valueElement = document.createElement("span");
+        valueElement.textContent = value;
+        if (key) {
+            valueElement.dataset.key = key;
+        }
+        container.appendChild(valueElement);
+    };
+
+    const renderBriefReview = () => {
+        briefReviewDetails.replaceChildren();
+
+        for (const [name, rawValue] of Object.entries(briefData)) {
+            const values = Array.isArray(rawValue) ? rawValue : [rawValue];
+            const controls = Array.from(quickScriptForm.elements)
+                .filter((control) => control.name === name);
+            const firstControl = controls[0];
+            let label = firstControl?.labels?.[0];
+
+            if (firstControl?.type === "checkbox") {
+                label = firstControl.closest("fieldset")?.querySelector("legend") || label;
+            }
+
+            const labelText = label?.textContent.trim() || name;
+            const term = document.createElement("dt");
+            term.textContent = labelText;
+            if (label?.dataset.key) {
+                term.dataset.key = label.dataset.key;
+            }
+
+            const description = document.createElement("dd");
+            const displayValues = firstControl?.type === "checkbox"
+                ? controls.filter((control) => control.checked && values.includes(control.value))
+                : values;
+
+            displayValues.forEach((value, index) => {
+                if (index > 0) {
+                    description.appendChild(document.createTextNode(", "));
+                }
+
+                if (firstControl?.type === "checkbox") {
+                    const choiceLabel = value.labels?.[0];
+                    const choiceText = choiceLabel?.querySelector("[data-key]") || choiceLabel;
+                    appendReviewValue(description, choiceText?.textContent.trim() || value.value, choiceText?.dataset.key);
+                } else if (firstControl instanceof HTMLSelectElement) {
+                    const selectedOption = firstControl.selectedOptions[0];
+                    appendReviewValue(description, selectedOption?.textContent.trim() || value, selectedOption?.dataset.key);
+                } else {
+                    appendReviewValue(description, value);
+                }
+            });
+
+            briefReviewDetails.append(term, description);
+        }
+    };
+
     quickScriptForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
+        if (!auth.currentUser) {
+            window.location.assign("login.html");
+            return;
+        }
+
+        briefData = getBriefData();
+        renderBriefReview();
+        briefReviewError.hidden = true;
+        quickScriptForm.hidden = true;
+        briefReview.hidden = false;
+        briefReviewTitle.focus();
+    });
+
+    editBriefButton.addEventListener("click", () => {
+        briefReview.hidden = true;
+        quickScriptForm.hidden = false;
+        quickScriptForm.scrollIntoView({ behavior: "smooth" });
+        document.getElementById("submitBrief").focus();
+    });
+
+    confirmBriefButton.addEventListener("click", async () => {
         const user = auth.currentUser;
 
         if (!user) {
@@ -243,44 +539,40 @@ if (quickScriptForm) {
             return;
         }
 
-        const formData = new FormData(quickScriptForm);
-        const briefData = {};
-
-        for (const [key, value] of formData.entries()) {
-
-            // We will handle uploaded files separately later.
-            if (value instanceof File) {
-                continue;
-            }
-
-            // Allows checkbox groups such as requestedPages
-            if (briefData[key]) {
-                if (!Array.isArray(briefData[key])) {
-                    briefData[key] = [briefData[key]];
-                }
-
-                briefData[key].push(value);
-            } else {
-                briefData[key] = value;
-            }
-        }
-
-        briefData.userId = user.uid;
-        briefData.userEmail = user.email;
-        briefData.package = "quickScript";
-        briefData.status = "submitted";
-        briefData.createdAt = serverTimestamp();
+        confirmBriefButton.disabled = true;
+        briefReviewError.hidden = true;
 
         try {
             const docRef = await addDoc(
                 collection(db, "projects"),
-                briefData
+                {
+                    ...briefData,
+                    userId: user.uid,
+                    userEmail: user.email,
+                    package: "quickScript",
+                    status: "submitted",
+                    createdAt: serverTimestamp()
+                }
             );
 
             console.log("Project saved:", docRef.id);
-
+            const submittedOrderLink = document.getElementById("submittedOrderLink");
+            submittedOrderLink.href = `orderDetails.html?order=${encodeURIComponent(docRef.id)}`;
+            submittedOrderLink.textContent = briefData.preferredDomain || briefData.companyName;
+            delete submittedOrderLink.dataset.key;
+            submittedOrderLink.hidden = false;
+            briefReviewIntro.hidden = true;
+            briefReviewFollowup.hidden = true;
+            briefReviewActions.hidden = true;
+            briefReviewTitle.hidden = true;
+            briefSubmittedTitle.hidden = false;
+            briefSubmittedTitle.focus();
+            briefReviewSuccess.hidden = false;
+            briefReviewDashboard.hidden = false;
         } catch (error) {
             console.error("Could not save website brief:", error);
+            briefReviewError.hidden = false;
+            confirmBriefButton.disabled = false;
         }
     });
 }
