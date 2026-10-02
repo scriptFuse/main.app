@@ -228,6 +228,7 @@ export const translation = {
     logoDropPrompt: "Drop your logo here or click to browse",
 
     designPreference: "What design style would you prefer?",
+    selectStyle: "Pick a style",
     designColorful: "Very colorful",
     designMonochrome: "Black and white",
     designMatchLogo: "Match my logo",
@@ -541,6 +542,7 @@ export const translation = {
     logoDropPrompt: "Déposez votre logo ici ou cliquez pour parcourir",
 
     designPreference: "Quel style de design pr\u00e9f\u00e9rez-vous?",
+    selectStyle: "Choisissez un style",
     designColorful: "Très coloré",
     designMonochrome: "Noir et blanc",
     designMatchLogo: "Assorti à mon logo",

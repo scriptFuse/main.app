@@ -1,6 +1,13 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyBrSbHqKRuHiihQ71oNx4dm5lHT05t7gAI",
@@ -11,6 +18,9 @@ const firebaseConfig = {
     appId: "1:783941432251:web:d46cb739dfcca9fc340a9e",
     measurementId: "G-GPHS8GKSKC",
 };
+
+
+
 
 export const app = initializeApp(firebaseConfig);
 
@@ -28,6 +38,8 @@ if (homeGuestActions && homeDashboardButton) {
         homeDashboardButton.hidden = !user;
     });
 }
+
+export const db = getFirestore(app);
 
 const accountCreationForm = document.getElementById("accountCreationForm");
 
@@ -221,9 +233,54 @@ document.querySelectorAll("[data-dropzone]").forEach((dropzone) => {
 const quickScriptForm = document.getElementById("quickScriptForm");
 
 if (quickScriptForm) {
-    quickScriptForm.addEventListener("submit", (event) => {
-        // Keep answers on the page until order submission is connected.
+    quickScriptForm.addEventListener("submit", async (event) => {
         event.preventDefault();
-        document.getElementById("briefSubmissionStatus").hidden = false;
+
+        const user = auth.currentUser;
+
+        if (!user) {
+            window.location.assign("login.html");
+            return;
+        }
+
+        const formData = new FormData(quickScriptForm);
+        const briefData = {};
+
+        for (const [key, value] of formData.entries()) {
+
+            // We will handle uploaded files separately later.
+            if (value instanceof File) {
+                continue;
+            }
+
+            // Allows checkbox groups such as requestedPages
+            if (briefData[key]) {
+                if (!Array.isArray(briefData[key])) {
+                    briefData[key] = [briefData[key]];
+                }
+
+                briefData[key].push(value);
+            } else {
+                briefData[key] = value;
+            }
+        }
+
+        briefData.userId = user.uid;
+        briefData.userEmail = user.email;
+        briefData.package = "quickScript";
+        briefData.status = "submitted";
+        briefData.createdAt = serverTimestamp();
+
+        try {
+            const docRef = await addDoc(
+                collection(db, "projects"),
+                briefData
+            );
+
+            console.log("Project saved:", docRef.id);
+
+        } catch (error) {
+            console.error("Could not save website brief:", error);
+        }
     });
 }
