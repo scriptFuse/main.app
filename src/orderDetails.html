@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ScriptFuse — Order details</title>
-    <link rel="stylesheet" href="styles.css?v=8">
-    <script type="module" src="orders.js?v=2"></script>
+    <link rel="stylesheet" href="styles.css?v=11">
+    <script type="module" src="orders.js?v=5"></script>
 </head>
 <body>
 <main class="page orders-page card">
@@ -17,7 +17,23 @@
     <p id="orderStatus" role="status" data-key="ordersLoading">Loading…</p>
     <section id="savedOrder" hidden>
         <h2 id="orderName"></h2>
-        <p data-key="briefSubmissionSuccess">Your request has been submitted. A developer will review it and reply.</p>
+        <p id="customerOrderNotice" data-key="briefSubmissionSuccess">Your request has been submitted. A developer will review it and reply.</p>
+        <section id="adminOrderControls" class="admin-order-controls" aria-labelledby="adminOrderControlsTitle" hidden>
+            <h3 id="adminOrderControlsTitle" data-key="manageOrderStatus">Manage order status</h3>
+            <label for="orderStatusSelect" data-key="orderStatus">Status</label>
+            <select id="orderStatusSelect" name="orderStatus">
+                <option value="submitted" data-key="statusSubmitted">Submitted</option>
+                <option value="in-review" data-key="statusInReview">In review</option>
+                <option value="in-progress" data-key="statusInProgress">In progress</option>
+                <option value="awaiting-payment" data-key="statusAwaitingPayment">Awaiting payment</option>
+                <option value="completed" data-key="statusCompleted">Completed</option>
+                <option value="declined" data-key="statusDeclined">Declined</option>
+                <option value="cancelled" data-key="statusCancelled">Cancelled</option>
+                <option value="archived" data-key="statusArchived">Archived</option>
+            </select>
+            <button type="button" id="updateOrderStatus" data-key="updateOrderStatus">Update status</button>
+            <p id="orderStatusUpdateMessage" role="status" hidden></p>
+        </section>
         <dl id="savedOrderDetails" class="brief-review-details"></dl>
         <a id="orderMessagesLink" class="button" data-key="orderMessages">Messages</a>
     </section>

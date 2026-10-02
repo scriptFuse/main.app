@@ -1,7 +1,7 @@
 import { auth, db } from "./firebase.js";
 import { translation } from "./translation.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-import { collection, doc, getDoc, query, where, orderBy, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+import { collection, doc, getDoc, query, where, orderBy, onSnapshot, addDoc, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 const language = () => document.documentElement.lang === "fr" ? "fr" : "en";
 const text = (key) => translation[language()][key] || key;
@@ -15,8 +15,19 @@ function status(element, key) {
 }
 const orderId = new URLSearchParams(location.search).get("order");
 const validId = orderId && /^[^/]{1,1500}$/.test(orderId);
+const newOrdersView = Boolean(document.getElementById("newOrdersView"));
 const orderUrl = (page, id) => `${page}.html?order=${encodeURIComponent(id)}`;
 const orderName = (data) => data.preferredDomain || data.companyName || text("unnamedOrder");
+const orderStatusKeys = {
+    submitted: "statusSubmitted",
+    "in-review": "statusInReview",
+    "in-progress": "statusInProgress",
+    "awaiting-payment": "statusAwaitingPayment",
+    completed: "statusCompleted",
+    declined: "statusDeclined",
+    cancelled: "statusCancelled",
+    archived: "statusArchived"
+};
 let stopOrders;
 let stopMessages;
 let activeOrder;
@@ -27,18 +38,34 @@ let generation = 0;
 let sending = false;
 let messagesReady = false;
 let teamRole = null;
+let updatingOrderStatus = false;
+const editableOrderStatuses = new Set([
+    "submitted",
+    "in-review",
+    "in-progress",
+    "awaiting-payment",
+    "completed",
+    "declined",
+    "cancelled",
+    "archived"
+]);
 
 function renderOrders() {
     const list = document.getElementById("ordersList");
     if (!list) return;
     list.replaceChildren();
-    const current = teamRole
-        ? orderDocs
-        : orderDocs.filter((item) => !["completed", "cancelled", "archived"].includes(item.data().status));
+    const current = newOrdersView
+        ? orderDocs.filter((item) => item.data().status === "submitted")
+        : teamRole
+            ? orderDocs
+            : orderDocs.filter((item) => !["completed", "declined", "cancelled", "archived"].includes(item.data().status));
     current.sort((a, b) => (b.data().createdAt?.toMillis() || 0) - (a.data().createdAt?.toMillis() || 0));
     const ordersStatus = document.getElementById("ordersStatus");
     ordersStatus.hidden = current.length > 0;
-    if (!current.length) status(ordersStatus, teamRole ? "allOrdersEmpty" : "ordersEmpty");
+    if (!current.length) {
+        const emptyKey = newOrdersView ? "newOrdersEmpty" : teamRole ? "allOrdersEmpty" : "ordersEmpty";
+        status(ordersStatus, emptyKey);
+    }
     for (const item of current) {
         const order = item.data();
         const card = document.createElement("article");
@@ -51,18 +78,22 @@ function renderOrders() {
         const messages = document.createElement("a");
         messages.href = orderUrl("orderMessages", item.id);
         keyed(messages, "orderMessages");
-        card.append(heading, messages);
+        card.append(heading);
+        if (order.status) {
+            const orderStatus = document.createElement("p");
+            const statusKey = orderStatusKeys[order.status];
+            const displayStatus = statusKey
+                ? text(statusKey)
+                : order.status.replace(/[-_]+/g, " ").replace(/\b\w/g, (character) => character.toUpperCase());
+            orderStatus.className = `order-status-badge order-status-${order.status.replace(/[^a-z0-9-]/gi, "")}`;
+            orderStatus.textContent = `${text("orderStatus")}: ${displayStatus}`;
+            card.append(orderStatus);
+        }
+        card.append(messages);
         if (teamRole) {
-            if (order.userEmail) {
-                const customer = document.createElement("p");
-                customer.textContent = `${text("orderCustomer")}: ${order.userEmail}`;
-                card.append(customer);
-            }
-            if (order.status) {
-                const orderStatus = document.createElement("p");
-                orderStatus.textContent = `${text("orderStatus")}: ${order.status}`;
-                card.append(orderStatus);
-            }
+            const customer = document.createElement("p");
+            customer.textContent = `${text("orderCustomer")}: ${order.userName?.trim() || text("customerNameUnavailable")}`;
+            card.append(customer);
         }
         list.append(card);
     }
@@ -137,8 +168,14 @@ onAuthStateChanged(auth, async (user) => {
         return;
     }
     let claims;
+    let userDoc;
     try {
-        ({ claims } = await user.getIdTokenResult(true));
+        const [tokenResult, userSnapshot] = await Promise.all([
+            user.getIdTokenResult(true),
+            getDoc(doc(db, "users", user.uid))
+        ]);
+        claims = tokenResult.claims;
+        userDoc = userSnapshot;
     } catch (error) {
         console.error("Could not verify the user's team role.", error);
         const ordersStatus = document.getElementById("ordersStatus");
@@ -148,14 +185,27 @@ onAuthStateChanged(auth, async (user) => {
         return;
     }
     if (version !== generation) return;
-    teamRole = claims.admin === true ? "admin" : claims.developer === true ? "developer" : null;
+    const storedRole = userDoc.exists() ? userDoc.data().role : null;
+    teamRole = claims.admin === true || storedRole === "admin"
+        ? "admin"
+        : claims.developer === true || storedRole === "developer"
+            ? "developer"
+            : null;
     if (document.getElementById("ordersList")) {
-        if (teamRole) {
+        if (newOrdersView && teamRole !== "admin") {
+            status(document.getElementById("ordersStatus"), "orderUnavailable");
+            return;
+        }
+        if (newOrdersView) {
+            keyed(document.querySelector("h1[data-key]"), "newOrders");
+        } else if (teamRole) {
             keyed(document.querySelector("h1[data-key='currentOrders']"), "allOrders");
         }
-        const projectsQuery = teamRole
-            ? query(collection(db, "projects"))
-            : query(collection(db, "projects"), where("userId", "==", user.uid));
+        const projectsQuery = newOrdersView
+            ? query(collection(db, "projects"), where("status", "==", "submitted"))
+            : teamRole
+                ? query(collection(db, "projects"))
+                : query(collection(db, "projects"), where("userId", "==", user.uid));
         stopOrders = onSnapshot(projectsQuery, (snapshot) => {
             orderDocs = snapshot.docs;
             renderOrders();
@@ -178,6 +228,15 @@ onAuthStateChanged(auth, async (user) => {
         activeOrder = snapshot.data();
         document.getElementById("orderName").textContent = orderName(activeOrder);
         if (document.getElementById("savedOrderDetails")) {
+            document.getElementById("customerOrderNotice").hidden =
+                Boolean(teamRole) || activeOrder.status !== "submitted";
+            if (teamRole) {
+                document.getElementById("adminOrderControls").hidden = false;
+                const savedStatus = editableOrderStatuses.has(activeOrder.status)
+                    ? activeOrder.status
+                    : "submitted";
+                document.getElementById("orderStatusSelect").value = savedStatus;
+            }
             const response = await fetch("quickScriptPackage.html");
             if (!response.ok) throw new Error("Could not load order labels.");
             const html = await response.text();
@@ -237,9 +296,41 @@ document.getElementById("messageForm")?.addEventListener("submit", async (event)
     }
 });
 
+document.getElementById("updateOrderStatus")?.addEventListener("click", async () => {
+    const select = document.getElementById("orderStatusSelect");
+    const updateButton = document.getElementById("updateOrderStatus");
+    const message = document.getElementById("orderStatusUpdateMessage");
+    const nextStatus = select.value;
+    const user = auth.currentUser;
+
+    if (updatingOrderStatus || !teamRole || !activeOrder || !user || !editableOrderStatuses.has(nextStatus)) {
+        return;
+    }
+    if (nextStatus === activeOrder.status) {
+        status(message, "orderStatusUnchanged");
+        return;
+    }
+
+    updatingOrderStatus = true;
+    updateButton.disabled = true;
+    message.hidden = true;
+    try {
+        await updateDoc(doc(db, "projects", orderId), { status: nextStatus });
+        activeOrder.status = nextStatus;
+        status(message, "orderStatusUpdated");
+    } catch (error) {
+        console.error("Could not update order status.", error);
+        status(message, "orderStatusUpdateError");
+    } finally {
+        updatingOrderStatus = false;
+        updateButton.disabled = false;
+    }
+});
+
 document.addEventListener("languagechange", () => {
     if (document.getElementById("ordersList")) {
-        if (teamRole) keyed(document.querySelector("h1[data-key]"), "allOrders");
+        if (newOrdersView) keyed(document.querySelector("h1[data-key]"), "newOrders");
+        else if (teamRole) keyed(document.querySelector("h1[data-key]"), "allOrders");
         renderOrders();
     }
     if (activeOrder) {

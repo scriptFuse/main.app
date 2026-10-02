@@ -4,12 +4,12 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="module" src="translation.js?v=4"></script>
-    <script type="module" src="firebase.js?v=6"></script>
+    <script type="module" src="translation.js?v=5"></script>
+    <script type="module" src="firebase.js?v=7"></script>
     <title>ScriptFuse</title>
     
 
-    <link rel="stylesheet" href="styles.css?v=5">
+    <link rel="stylesheet" href="styles.css?v=11">
 </head>
 <body>
 <main class="page page-User Dashboard">
@@ -48,6 +48,7 @@
 
 <dialog id="profileDialog" class="profile-dialog" aria-labelledby="profileDialogTitle">
     <form id="profileForm">
+        <button type="button" id="closeProfileDialogX" class="profile-dialog-close" aria-label="Close" title="Close">X</button>
         <h2 id="profileDialogTitle" data-key="editProfile">Edit profile</h2>
         <label for="profileName" data-key="profileName">Name</label>
         <input id="profileName" name="name" type="text" autocomplete="name" required>

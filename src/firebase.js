@@ -6,9 +6,10 @@ import {
     getFirestore,
     collection,
     addDoc,
-    serverTimestamp
+    serverTimestamp,
+    doc,
+    getDoc
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
-
 
 const firebaseConfig = {
     apiKey: "AIzaSyBrSbHqKRuHiihQ71oNx4dm5lHT05t7gAI",
@@ -205,11 +206,22 @@ if (dashboardUserName) {
         dashboardUserRole.textContent = "";
         delete dashboardUserRole.dataset.key;
         try {
-            const { claims } = await user.getIdTokenResult(true);
+            const [userDoc, tokenResult] = await Promise.all([
+                getDoc(doc(db, "users", user.uid)),
+                user.getIdTokenResult(true)
+            ]);
+            const userData = userDoc.exists() ? userDoc.data() : {};
             if (generation !== dashboardAuthGeneration) return;
-            const role = claims.admin === true
+            if (userData.role === "admin" || tokenResult.claims.admin === true) {
+                const language = document.documentElement.lang === "fr" ? "fr" : "en";
+                const newOrderLink = document.getElementById("newOrder");
+                newOrderLink.href = "newOrders.html";
+                newOrderLink.dataset.key = "adminNewOrders";
+                newOrderLink.textContent = translation[language].adminNewOrders;
+            }
+            const role = userData.role === "admin"
                 ? "adminRole"
-                : claims.developer === true
+                : userData.role === "developer"
                     ? "developerRole"
                     : null;
             if (role) {
@@ -263,6 +275,10 @@ if (profileDialog && profileForm) {
     });
 
     document.getElementById("closeProfileDialog").addEventListener("click", () => {
+        profileDialog.close();
+    });
+
+    document.getElementById("closeProfileDialogX").addEventListener("click", () => {
         profileDialog.close();
     });
 
@@ -548,6 +564,7 @@ if (quickScriptForm) {
                 {
                     ...briefData,
                     userId: user.uid,
+                    userName: user.displayName?.trim() || "",
                     userEmail: user.email,
                     package: "quickScript",
                     status: "submitted",

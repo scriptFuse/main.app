@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ScriptFuse — Current orders</title>
+    <title>ScriptFuse — New orders</title>
     <link rel="stylesheet" href="styles.css?v=11">
     <script type="module" src="orders.js?v=4"></script>
 </head>
 <body>
-<main class="page orders-page card">
+<main id="newOrdersView" class="page orders-page card">
     <div class="page-header">
         <a href="userDashboard.html" data-key="dashboard">Dashboard</a>
         <button type="button" id="lang-toggle" class="lang-btn">EN / FR</button>
     </div>
-    <h1 data-key="currentOrders">Current orders</h1>
+    <h1 data-key="newOrders">New orders</h1>
     <p id="ordersStatus" role="status" data-key="ordersLoading">Loading…</p>
     <div id="ordersList" class="orders-list"></div>
 </main>
