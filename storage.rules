@@ -1,0 +1,22 @@
+﻿rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function team() {
+      return request.auth != null && (
+        request.auth.token.get('admin', false) == true
+        || request.auth.token.get('developer', false) == true
+        || (firestore.exists(/databases/(default)/documents/users/$(request.auth.uid))
+          && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.get('role', '') in ['admin', 'developer']));
+    }
+    match /briefs/{uid}/{orderId}/{imageId} {
+      allow read: if request.auth != null && (request.auth.uid == uid || team());
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && !firestore.exists(/databases/(default)/documents/projects/$(orderId))
+        && imageId.matches('^[a-f0-9-]{36}$')
+        && request.resource.size > 0 && request.resource.size <= 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp|gif)');
+      allow delete: if request.auth != null && request.auth.uid == uid
+        && !firestore.exists(/databases/(default)/documents/projects/$(orderId));
+    }
+  }
+}

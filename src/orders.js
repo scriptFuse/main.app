@@ -1,4 +1,6 @@
-import { auth, db } from "./firebase.js";
+import { filterOrders } from "./orderFilters.js";
+import { downloadImage } from "./attachments.js";
+import { app, auth, db } from "./firebase.js";
 import { translation } from "./translation.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 import { collection, doc, getDoc, query, where, orderBy, onSnapshot, addDoc, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -16,6 +18,10 @@ function status(element, key) {
 const orderId = new URLSearchParams(location.search).get("order");
 const validId = orderId && /^[^/]{1,1500}$/.test(orderId);
 const newOrdersView = Boolean(document.getElementById("newOrdersView"));
+const pastOrdersView = Boolean(document.getElementById("pastOrdersView"));
+const requestedInfoView = Boolean(document.getElementById("requestedInfoView"));
+const listView = newOrdersView ? "new" : pastOrdersView ? "past" : requestedInfoView ? "requested" : "current";
+let ordersState = "ordersLoading";
 const orderUrl = (page, id) => `${page}.html?order=${encodeURIComponent(id)}`;
 const orderName = (data) => data.preferredDomain || data.companyName || text("unnamedOrder");
 const orderStatusKeys = {
@@ -23,6 +29,7 @@ const orderStatusKeys = {
     "in-review": "statusInReview",
     "in-progress": "statusInProgress",
     "awaiting-payment": "statusAwaitingPayment",
+    "awaiting-info": "statusAwaitingInfo",
     completed: "statusCompleted",
     declined: "statusDeclined",
     cancelled: "statusCancelled",
@@ -44,6 +51,7 @@ const editableOrderStatuses = new Set([
     "in-review",
     "in-progress",
     "awaiting-payment",
+    "awaiting-info",
     "completed",
     "declined",
     "cancelled",
@@ -54,16 +62,16 @@ function renderOrders() {
     const list = document.getElementById("ordersList");
     if (!list) return;
     list.replaceChildren();
-    const current = newOrdersView
-        ? orderDocs.filter((item) => item.data().status === "submitted")
-        : teamRole
-            ? orderDocs
-            : orderDocs.filter((item) => !["completed", "declined", "cancelled", "archived"].includes(item.data().status));
-    current.sort((a, b) => (b.data().createdAt?.toMillis() || 0) - (a.data().createdAt?.toMillis() || 0));
     const ordersStatus = document.getElementById("ordersStatus");
+    if (ordersState !== "ready") {
+        status(ordersStatus, ordersState);
+        return;
+    }
+    const current = filterOrders(orderDocs, listView, Boolean(teamRole));
+    current.sort((a, b) => (b.data().createdAt?.toMillis() || 0) - (a.data().createdAt?.toMillis() || 0));
     ordersStatus.hidden = current.length > 0;
     if (!current.length) {
-        const emptyKey = newOrdersView ? "newOrdersEmpty" : teamRole ? "allOrdersEmpty" : "ordersEmpty";
+        const emptyKey = pastOrdersView ? "pastOrdersEmpty" : requestedInfoView ? "requestedInfoEmpty" : newOrdersView ? "newOrdersEmpty" : teamRole ? "allOrdersEmpty" : "ordersEmpty";
         status(ordersStatus, emptyKey);
     }
     for (const item of current) {
@@ -126,6 +134,32 @@ function renderDetails() {
         }).join(", ");
         details.append(term, description);
     }
+    if (Array.isArray(activeOrder.attachments) && activeOrder.attachments.length) {
+        const term = document.createElement("dt");
+        term.textContent = text("orderAttachments");
+        const description = document.createElement("dd");
+        for (const attachment of activeOrder.attachments) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "button-secondary";
+            button.textContent = attachment.name;
+            button.addEventListener("click", async () => {
+                button.disabled = true;
+                const error = document.createElement("p");
+                error.setAttribute("role", "alert");
+                try {
+                    await downloadImage(app, attachment, activeOrder.userId, orderId);
+                } catch {
+                    error.textContent = text("attachmentError");
+                    button.after(error);
+                } finally {
+                    button.disabled = false;
+                }
+            });
+            description.append(button, document.createElement("br"));
+        }
+        details.append(term, description);
+    }
 }
 
 function renderMessages() {
@@ -163,6 +197,9 @@ onAuthStateChanged(auth, async (user) => {
     activeOrder = null;
     messagesReady = false;
     teamRole = null;
+    orderDocs = [];
+    ordersState = "ordersLoading";
+    renderOrders();
     if (!user) {
         location.replace("login.html");
         return;
@@ -177,9 +214,10 @@ onAuthStateChanged(auth, async (user) => {
         claims = tokenResult.claims;
         userDoc = userSnapshot;
     } catch (error) {
+        if (version !== generation) return;
         console.error("Could not verify the user's team role.", error);
         const ordersStatus = document.getElementById("ordersStatus");
-        if (ordersStatus) status(ordersStatus, "ordersError");
+        if (ordersStatus) { ordersState = "ordersError"; renderOrders(); }
         const orderStatus = document.getElementById("orderStatus");
         if (orderStatus) status(orderStatus, "orderUnavailable");
         return;
@@ -193,13 +231,14 @@ onAuthStateChanged(auth, async (user) => {
             : null;
     if (document.getElementById("ordersList")) {
         if (newOrdersView && teamRole !== "admin") {
-            status(document.getElementById("ordersStatus"), "orderUnavailable");
+            ordersState = "orderUnavailable";
+            renderOrders();
             return;
         }
         if (newOrdersView) {
             keyed(document.querySelector("h1[data-key]"), "newOrders");
-        } else if (teamRole) {
-            keyed(document.querySelector("h1[data-key='currentOrders']"), "allOrders");
+        } else if (teamRole && listView === "current") {
+            keyed(document.querySelector("h1[data-key]"), "allOrders");
         }
         const projectsQuery = newOrdersView
             ? query(collection(db, "projects"), where("status", "==", "submitted"))
@@ -207,9 +246,15 @@ onAuthStateChanged(auth, async (user) => {
                 ? query(collection(db, "projects"))
                 : query(collection(db, "projects"), where("userId", "==", user.uid));
         stopOrders = onSnapshot(projectsQuery, (snapshot) => {
+            if (version !== generation) return;
             orderDocs = snapshot.docs;
+            ordersState = "ready";
             renderOrders();
-        }, () => status(document.getElementById("ordersStatus"), "ordersError"));
+        }, () => {
+            if (version !== generation) return;
+            ordersState = "ordersError";
+            renderOrders();
+        });
         return;
     }
     const orderStatus = document.getElementById("orderStatus");
@@ -330,7 +375,7 @@ document.getElementById("updateOrderStatus")?.addEventListener("click", async ()
 document.addEventListener("languagechange", () => {
     if (document.getElementById("ordersList")) {
         if (newOrdersView) keyed(document.querySelector("h1[data-key]"), "newOrders");
-        else if (teamRole) keyed(document.querySelector("h1[data-key]"), "allOrders");
+        else if (teamRole && listView === "current") keyed(document.querySelector("h1[data-key]"), "allOrders");
         renderOrders();
     }
     if (activeOrder) {

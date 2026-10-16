@@ -28,6 +28,7 @@
 .order-status-submitted { color: #805b00; background: var(--highlight-soft); border-color: #efd38e; }
 .order-status-in-review { color: var(--primary); background: #eaf1ff; border-color: #b8d0ff; }
 .order-status-in-progress { color: var(--teal); background: var(--teal-soft); border-color: #b6ddd6; }
+.order-status-awaiting-info,
 .order-status-awaiting-payment { color: #7a3e00; background: #fff0db; border-color: #ffd09b; }
 .order-status-completed { color: var(--teal); background: var(--teal-soft); border-color: #b6ddd6; }
 .order-status-declined,

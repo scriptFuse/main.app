@@ -25,12 +25,14 @@
                 <option value="submitted" data-key="statusSubmitted">Submitted</option>
                 <option value="in-review" data-key="statusInReview">In review</option>
                 <option value="in-progress" data-key="statusInProgress">In progress</option>
+                <option value="awaiting-info" data-key="statusAwaitingInfo">Awaiting information</option>
                 <option value="awaiting-payment" data-key="statusAwaitingPayment">Awaiting payment</option>
                 <option value="completed" data-key="statusCompleted">Completed</option>
                 <option value="declined" data-key="statusDeclined">Declined</option>
                 <option value="cancelled" data-key="statusCancelled">Cancelled</option>
                 <option value="archived" data-key="statusArchived">Archived</option>
             </select>
+            <p data-key="requestInfoHelp">To request information, choose Awaiting information and send your question through Messages. After reviewing the reply, update the status to resume work.</p>
             <button type="button" id="updateOrderStatus" data-key="updateOrderStatus">Update status</button>
             <p id="orderStatusUpdateMessage" role="status" hidden></p>
         </section>

@@ -2,10 +2,11 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/fireba
 import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
 import { createUserWithEmailAndPassword, EmailAuthProvider, getAuth, onAuthStateChanged, reauthenticateWithCredential, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 import { translation } from "./translation.js";
+import { selectedImages, uploadImages } from "./attachments.js";
 import {
     getFirestore,
     collection,
-    addDoc,
+    setDoc,
     serverTimestamp,
     doc,
     getDoc
@@ -435,6 +436,12 @@ if (quickScriptForm) {
     const editBriefButton = document.getElementById("editBrief");
     const confirmBriefButton = document.getElementById("confirmBrief");
     let briefData;
+    let briefFiles = [];
+    let pendingOrder;
+    let submitting = false;
+    const uploadStatus = document.getElementById("briefUploadStatus");
+    const formError = document.getElementById("briefFileError");
+    const uploadText = (key) => translation[document.documentElement.lang === "fr" ? "fr" : "en"][key];
 
     const hasAnswer = (value) => {
         const normalized = String(value).trim();
@@ -522,6 +529,14 @@ if (quickScriptForm) {
 
             briefReviewDetails.append(term, description);
         }
+        if (briefFiles.length) {
+            const term = document.createElement("dt");
+            term.dataset.key = "orderAttachments";
+            term.textContent = uploadText("orderAttachments");
+            const description = document.createElement("dd");
+            description.textContent = briefFiles.map(({file}) => file.name).join(", ");
+            briefReviewDetails.append(term, description);
+        }
     };
 
     quickScriptForm.addEventListener("submit", async (event) => {
@@ -532,6 +547,15 @@ if (quickScriptForm) {
             return;
         }
 
+        try {
+            briefFiles = selectedImages(quickScriptForm);
+            formError.hidden = true;
+        } catch {
+            formError.textContent = uploadText("attachmentLimits");
+            formError.hidden = false;
+            return;
+        }
+        pendingOrder = doc(collection(db, "projects"));
         briefData = getBriefData();
         renderBriefReview();
         briefReviewError.hidden = true;
@@ -555,22 +579,35 @@ if (quickScriptForm) {
             return;
         }
 
+        if (submitting) return;
+        submitting = true;
         confirmBriefButton.disabled = true;
+        editBriefButton.disabled = true;
         briefReviewError.hidden = true;
+        uploadStatus.hidden = false;
 
         try {
-            const docRef = await addDoc(
-                collection(db, "projects"),
-                {
+            const attachments = await uploadImages(app, user.uid, pendingOrder.id, briefFiles, (percent) => {
+                uploadStatus.textContent = `${uploadText("uploadingImages")} ${percent}%`;
+            });
+            uploadStatus.textContent = uploadText("savingBrief");
+            const docRef = pendingOrder;
+            try {
+                await setDoc(docRef, {
                     ...briefData,
+                    attachments,
                     userId: user.uid,
                     userName: user.displayName?.trim() || "",
                     userEmail: user.email,
                     package: "quickScript",
                     status: "submitted",
                     createdAt: serverTimestamp()
-                }
-            );
+                });
+            } catch (error) {
+                // A lost acknowledgement must not produce a second order on retry.
+                const saved = await getDoc(docRef).catch(() => null);
+                if (!saved?.exists() || saved.data().userId !== user.uid) throw error;
+            }
 
             console.log("Project saved:", docRef.id);
             const submittedOrderLink = document.getElementById("submittedOrderLink");
@@ -590,6 +627,10 @@ if (quickScriptForm) {
             console.error("Could not save website brief:", error);
             briefReviewError.hidden = false;
             confirmBriefButton.disabled = false;
+        } finally {
+            submitting = false;
+            editBriefButton.disabled = false;
+            uploadStatus.hidden = true;
         }
     });
 }

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScriptFuse — Requested info</title>
+    <link rel="stylesheet" href="styles.css?v=11">
+    <script type="module" src="orders.js?v=4"></script>
+</head>
+<body>
+<main id="requestedInfoView" class="page orders-page card">
+    <div class="page-header">
+        <a href="userDashboard.html" data-key="dashboard">Dashboard</a>
+        <button type="button" id="lang-toggle" class="lang-btn">EN / FR</button>
+    </div>
+    <h1 data-key="requestedInfo">Requested info</h1>
+    <p data-key="requestedInfoDescription">Orders awaiting information. Open Messages to read the request and reply.</p>
+    <p id="ordersStatus" role="status" data-key="ordersLoading">Loading…</p>
+    <div id="ordersList" class="orders-list"></div>
+</main>
+</body>
+</html>

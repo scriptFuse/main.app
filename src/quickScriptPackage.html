@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="module" src="translation.js?v=9"></script>
+    <script type="module" src="translation.js"></script>
     <script type="module" src="firebase.js?v=5"></script>
     <title>ScriptFuse</title>
     <link rel="stylesheet" href="styles.css?v=11">
@@ -190,7 +190,7 @@
 <option value="no" data-key="briefNo">No</option>
 </select>
 
-<label class="file-dropzone" data-dropzone><input type="file" id="logoFile" name="logoFile" accept="image/*"><span data-key="logoFilePrompt">Drop your logo here or click to browse</span><span class="file-name-list" aria-live="polite"></span></label>
+<label class="file-dropzone" data-dropzone><input type="file" id="logoFile" name="logoFile" accept="image/jpeg,image/png,image/webp,image/gif"><span data-key="logoFilePrompt">Drop your logo here or click to browse</span><span class="file-name-list" aria-live="polite"></span></label>
 
 <label for="hasBrandColors" data-key="hasBrandColors">Do you already have brand colors?</label>
 <select id="hasBrandColors" name="hasBrandColors">
@@ -262,7 +262,7 @@
 <option value="no" data-key="briefNo">No</option>
 </select>
 
-<label class="file-dropzone" data-dropzone><input type="file" id="galleryFiles" name="galleryFiles" accept="image/*" multiple><span data-key="galleryFilesPrompt">Drop your images here or click to browse</span><span class="file-name-list" aria-live="polite"></span></label>
+<label class="file-dropzone" data-dropzone><input type="file" id="galleryFiles" name="galleryFiles" accept="image/jpeg,image/png,image/webp,image/gif" multiple><span data-key="galleryFilesPrompt">Drop your images here or click to browse</span><span class="file-name-list" aria-live="polite"></span></label>
 
 <label for="stockImages" data-key="stockImages">May ScriptFuse use appropriate stock images if needed?</label>
 <select id="stockImages" name="stockImages">
@@ -347,6 +347,8 @@
 <textarea id="additionalRequirements" name="additionalRequirements"></textarea>
 </section>
 
+                <p data-key="attachmentLimits">Images: JPEG, PNG, WebP or GIF; up to 10 MB each, one logo and 20 gallery images.</p>
+                <p id="briefFileError" role="alert" hidden></p>
                 <!-- SUBMIT WEBSITE BRIEF -->
                 <button type="submit" id="submitBrief" data-key="submitBrief">Submit website brief</button>
             </form>
@@ -358,6 +360,7 @@
                 <dl id="briefReviewDetails" class="brief-review-details"></dl>
                 <p id="briefReviewFollowup" data-key="briefReviewFollowup">After you confirm, a developer will review your request and reply. You can view their message in your dashboard under Current orders.</p>
                 <p id="briefReviewError" role="alert" data-key="briefSubmissionError" hidden>We could not submit your request. Please try again.</p>
+                <p id="briefUploadStatus" role="status" aria-live="polite" hidden></p>
                 <div id="briefReviewActions" class="brief-review-actions">
                     <button type="button" id="editBrief" class="button-secondary" data-key="editBrief">Edit</button>
                     <button type="button" id="confirmBrief" data-key="confirmBrief">Confirm request</button>
