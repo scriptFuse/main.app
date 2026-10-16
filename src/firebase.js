@@ -1,3 +1,4 @@
+import { packages, packageFromSearch, configurePackageFields } from "./packages.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
 import { createUserWithEmailAndPassword, EmailAuthProvider, getAuth, onAuthStateChanged, reauthenticateWithCredential, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
@@ -423,6 +424,21 @@ document.querySelectorAll("[data-dropzone]").forEach((dropzone) => {
 const quickScriptForm = document.getElementById("quickScriptForm");
 
 if (quickScriptForm) {
+    const selectedPackage = packageFromSearch(window.location.search);
+    configurePackageFields(quickScriptForm, selectedPackage);
+    if (!selectedPackage) {
+        quickScriptForm.hidden = true;
+        document.getElementById("packageError").hidden = false;
+        document.getElementById("selectedPackageName").hidden = true;
+        document.getElementById("selectedPackagePrice").hidden = true;
+    } else {
+        const language = document.documentElement.lang === "fr" ? "fr" : "en";
+        for (const [id, key] of [["selectedPackageName", packages[selectedPackage].label], ["selectedPackagePrice", packages[selectedPackage].price], ["packageBriefTitle", packages[selectedPackage].briefTitle]]) {
+            const element = document.getElementById(id);
+            element.dataset.key = key;
+            element.textContent = translation[language][key];
+        }
+    }
     const briefReview = document.getElementById("briefReview");
     const briefReviewTitle = document.getElementById("briefReviewTitle");
     const briefSubmittedTitle = document.getElementById("briefSubmittedTitle");
@@ -541,6 +557,7 @@ if (quickScriptForm) {
 
     quickScriptForm.addEventListener("submit", async (event) => {
         event.preventDefault();
+        if (!selectedPackage) return;
 
         if (!auth.currentUser) {
             window.location.assign("login.html");
@@ -579,7 +596,7 @@ if (quickScriptForm) {
             return;
         }
 
-        if (submitting) return;
+        if (submitting || !selectedPackage || !briefData) return;
         submitting = true;
         confirmBriefButton.disabled = true;
         editBriefButton.disabled = true;
@@ -599,7 +616,7 @@ if (quickScriptForm) {
                     userId: user.uid,
                     userName: user.displayName?.trim() || "",
                     userEmail: user.email,
-                    package: "quickScript",
+                    package: selectedPackage,
                     status: "submitted",
                     createdAt: serverTimestamp()
                 });

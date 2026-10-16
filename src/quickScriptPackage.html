@@ -6,7 +6,7 @@
     <script type="module" src="translation.js"></script>
     <script type="module" src="firebase.js?v=5"></script>
     <title>ScriptFuse</title>
-    <link rel="stylesheet" href="styles.css?v=11">
+    <link rel="stylesheet" href="styles.css?v=14">
 </head>
 <body>
 <main class="page page-Quick Script Package">
@@ -25,7 +25,30 @@
 
         <!-- QUICK SCRIPT PACKAGE FORM -->
         <section class="card text-center">
+            <h2 id="selectedPackageName" data-key="quickScript">Quick Script</h2>
+            <p id="selectedPackagePrice" data-key="quickPrice">$500 + tax</p>
+            <a class="package-change-link" href="newOrder.html" data-key="changePackage">Change package</a>
+            <p id="packageError" role="alert" data-key="invalidPackage" hidden>This package is unavailable. Please choose a package.</p>
             <form id="quickScriptForm" class="quick-script-form">
+
+<header class="package-brief-header">
+<h2 id="packageBriefTitle" data-key="basicWebsiteTitle">Basic website</h2>
+</header>
+<section class="brief-section" data-package-fields="booking" hidden>
+<label for="bookingRequirements" data-key="bookingRequirements">Describe the services to book, appointment lengths, staff, and availability.</label>
+<textarea id="bookingRequirements" name="bookingRequirements" maxlength="5000" required disabled></textarea>
+<label for="bookingTool" data-key="bookingTool">Do you already use a booking platform? (Optional)</label>
+<input id="bookingTool" name="bookingTool" type="text" maxlength="500" disabled>
+<label for="bookingPayments" data-key="bookingPayments">Describe any deposits, online payments, or cancellation rules needed. (Optional)</label>
+<textarea id="bookingPayments" name="bookingPayments" maxlength="5000" disabled></textarea>
+</section>
+<section class="brief-section" data-package-fields="custom" hidden>
+<label for="customRequirements" data-key="customRequirements">Describe the features, integrations, and custom functionality you need.</label>
+<textarea id="customRequirements" name="customRequirements" maxlength="5000" required disabled></textarea>
+<label for="customBudget" data-key="customBudget">What is your budget range? (Optional)</label>
+<input id="customBudget" name="customBudget" type="text" maxlength="500" disabled>
+<p data-key="customQuoteNotice">A personalized quote will be provided after reviewing your requirements.</p>
+</section>
 
 <!-- BUSINESS INFORMATION -->
 <section class="brief-section" aria-labelledby="briefBusiness">
@@ -167,6 +190,7 @@
 <option value="ready" data-key="briefContentReady">Yes, everything is ready</option>
 <option value="partial" data-key="briefContentPartial">Some of it</option>
 <option value="help-needed" data-key="briefContentNo">No</option>
+<option value="write-for-me" data-key="briefContentWriteForMe">I would like you to write the content</option>
 </select>
 
 <!-- AI PERMISSION FOR WRITTEN CONTENT -->
@@ -366,8 +390,10 @@
                     <button type="button" id="confirmBrief" data-key="confirmBrief">Confirm request</button>
                 </div>
                 <p id="briefReviewSuccess" role="status" data-key="briefSubmissionSuccess" hidden>Your request has been submitted. A developer will review it and reply. You can view their message in your dashboard under Current orders.</p>
-                <a id="submittedOrderLink" class="button" data-key="orderDetails" hidden>Order details</a>
-                <a id="briefReviewDashboard" class="button" href="currentOrders.html" data-key="currentOrders" hidden>Current orders</a>
+                <div class="brief-review-actions">
+                    <a id="submittedOrderLink" class="button" data-key="orderDetails" hidden>Order details</a>
+                    <a id="briefReviewDashboard" class="button" href="currentOrders.html" data-key="currentOrders" hidden>Current orders</a>
+                </div>
             </section>
          
         </section>

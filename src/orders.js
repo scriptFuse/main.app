@@ -1,3 +1,4 @@
+import { packages } from "./packages.js";
 import { filterOrders } from "./orderFilters.js";
 import { downloadImage } from "./attachments.js";
 import { app, auth, db } from "./firebase.js";
@@ -111,6 +112,13 @@ function renderDetails() {
     if (!activeOrder || !formTemplate) return;
     const details = document.getElementById("savedOrderDetails");
     details.replaceChildren();
+    if (Object.hasOwn(packages, activeOrder.package || "")) {
+        const term = document.createElement("dt");
+        term.textContent = text("orderPackage");
+        const description = document.createElement("dd");
+        description.textContent = text(packages[activeOrder.package].label);
+        details.append(term, description);
+    }
     // Use the brief's own labels and option keys so old and new orders match confirmation.
     for (const [name, rawValue] of Object.entries(activeOrder)) {
         const controls = Array.from(formTemplate.elements).filter((control) => control.name === name);

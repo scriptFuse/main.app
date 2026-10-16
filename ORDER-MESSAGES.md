@@ -78,3 +78,30 @@ Verification:
 
 Run filtering checks with Node:
 `node --test --test-isolation=none tests/orderFilters.test.mjs`
+
+
+Package requests
+----------------
+
+All three package cards link to the shared brief page. The `package` query
+parameter accepts `quickScript` (also the default without a parameter), `booking`,
+or `custom`. Unknown package IDs show an error and a link to choose a package.
+Booking asks for booking requirements, an existing platform, and payment or
+cancellation requirements. Custom asks for required features/integrations and an
+optional budget; the final quote follows review. Inactive package fields are
+hidden and disabled so their values and validation do not affect another package.
+
+The selected package is shown above the brief through review/confirmation, saved
+in `projects.package`, and displayed in order details. All package-specific answers
+reuse the shared review and saved-detail rendering, plus the existing image flow.
+
+Publish the updated local `firestore.rules` package allowlist before accepting
+booking/custom submissions in the live project. No deployed rules were changed.
+
+Check each package card in EN/FR, fill its required fields, review, edit, confirm,
+and reload order details to verify its package and answers. Check Quick Script
+still submits without the booking/custom questions. Verify an unknown package URL
+cannot submit, and the other customer's order access remains denied.
+
+Run package/filter checks:
+`node --test --test-isolation=none tests/packages.test.mjs tests/orderFilters.test.mjs`

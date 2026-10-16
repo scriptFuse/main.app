@@ -17,7 +17,7 @@ service cloud.firestore {
         && request.resource.data.userId == request.auth.uid
         && request.resource.data.userEmail == request.auth.token.email
         && request.resource.data.status == 'submitted'
-        && request.resource.data.package == 'quickScript'
+        && request.resource.data.package in ['quickScript', 'booking', 'custom']
         && request.resource.data.companyName is string
         && request.resource.data.createdAt == request.time;
       allow update, delete: if team();
